@@ -20,4 +20,6 @@ Import-Package:
  org.eclipse.smarthome.core.util,
  org.slf4j
 Service-Component: OSGI-INF/*.xml
-Require-Bundle: org.eclipse.osgi
+Require-Bundle: org.eclipse.osgi,
+ org.eclipse.smarthome.io.net,
+ com.google.gson

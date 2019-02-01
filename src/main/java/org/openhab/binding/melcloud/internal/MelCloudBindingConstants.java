@@ -27,12 +27,16 @@ public class MelCloudBindingConstants {
     private static final String BINDING_ID = "melcloud";
 
     // List of all Main Bridge properties
-    public static final String USERNAME = "username";
-    public static final String WEBPASS = "webpass";
-    public static final String WEBUIURL = "webUIUrl";
+    public static final String LOGIN_USERNAME = "username";
+    public static final String LOGIN_PASS = "webpass";
 
+    // Url's
+    public static final String WEBUIURL = "webUIUrl";
+    public static final String LOGIN_URL = "loginUrl";
+    public static final String LOGIN_LANG = "loginLanguageId";
+    public static final String LOGIN_APPVERSION = "loginAppVersion";
     // List of Bridge Type UIDs
-    public static final ThingTypeUID LOGIN_BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "MELCloudServer");
+    public static final ThingTypeUID LOGIN_BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "melCloudServer");
 
     // List of all Thing Type UIDs
     public static final ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "sample");

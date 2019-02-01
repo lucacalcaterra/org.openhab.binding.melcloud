@@ -19,12 +19,16 @@ import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
+import org.openhab.binding.melcloud.handler.MelCloudBridgeHandler;
 import org.osgi.service.component.annotations.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link MelCloudHandlerFactory} is responsible for creating things and thing
@@ -35,6 +39,7 @@ import org.osgi.service.component.annotations.Component;
 @NonNullByDefault
 @Component(configurationPid = "binding.melcloud", service = ThingHandlerFactory.class)
 public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
+    private final Logger logger = LoggerFactory.getLogger(MelCloudHandlerFactory.class);
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_SAMPLE);
     private static final Set<ThingTypeUID> BRIDGE_THING_TYPES_UIDS = Collections.singleton(LOGIN_BRIDGE_THING_TYPE);
@@ -49,7 +54,14 @@ public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
     protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
-        if (THING_TYPE_SAMPLE.equals(thingTypeUID)) {
+        if (LOGIN_BRIDGE_THING_TYPE.equals(thingTypeUID)) {
+            MelCloudBridgeHandler handler = new MelCloudBridgeHandler((Bridge) thing);
+            // registerRiscoCloudDiscoveryService(handler);
+            logger.debug("createThing(): LOGIN_BRIDGE_THING_TYPE: Creating an '{}' type Thing - {}", thingTypeUID,
+                    handler.getID());
+            return handler;
+
+        } else if (THING_TYPE_SAMPLE.equals(thingTypeUID)) {
             return new MelCloudHandler(thing);
         }
 

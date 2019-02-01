@@ -37,7 +37,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private final Logger logger = LoggerFactory.getLogger(MelCloudBridgeHandler.class);
 
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
-    // private @Nullable LoginResult loginResult;
+    private @Nullable LoginResult loginResult;
 
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
@@ -49,10 +49,11 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         logger.debug("Initializing MelCloud main bridge handler.");
         Configuration config = getThing().getConfiguration();
 
-        // loginResult = WebSiteInterface.webSiteLogin(config);
+        loginResult = ConnectionHandler.Login(config);
 
+        logger.debug("eseguito");
         // Updates the thing status accordingly
-        if (1 == 1 /* loginResult.error == null */) {
+        if (loginResult.error == null) {
             updateStatus(ThingStatus.ONLINE);
         } else {
             /*
