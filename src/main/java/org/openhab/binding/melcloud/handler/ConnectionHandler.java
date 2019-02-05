@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
-import org.openhab.binding.melcloud.json.ServerDatasObject;
+import org.openhab.binding.melcloud.json.LoginClientRes;
 //import org.jsoup.Jsoup;
 // import org.openhab.binding.riscocloud.json.ServerDatasHandler;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public final class ConnectionHandler {
                         null, stream, "application/json", 20000);
                 logger.debug("loginPage=" + loginResponse);
                 Gson gson = new Gson();
-                ServerDatasObject resp = gson.fromJson(loginResponse, ServerDatasObject.class);
+                LoginClientRes logResult = gson.fromJson(loginResponse, LoginClientRes.class);
                 logger.debug("ServerDataObject assigned");
 
             } catch (IOException e) {
