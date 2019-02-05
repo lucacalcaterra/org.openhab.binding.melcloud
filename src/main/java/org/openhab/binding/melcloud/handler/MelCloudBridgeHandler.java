@@ -52,6 +52,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         loginResult = ConnectionHandler.Login(config);
 
         logger.debug("eseguito");
+
         // Updates the thing status accordingly
         if (loginResult.error == null) {
             updateStatus(ThingStatus.ONLINE);

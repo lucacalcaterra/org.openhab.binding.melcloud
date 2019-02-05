@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
+import org.openhab.binding.melcloud.json.ServerDatasObject;
 //import org.jsoup.Jsoup;
 // import org.openhab.binding.riscocloud.json.ServerDatasHandler;
 import org.slf4j.Logger;
@@ -45,9 +46,15 @@ public final class ConnectionHandler {
                 // String content = MelCloudBindingConstants.WEBPASS;
                 String content = jsonReq.toString();
                 InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+                // loginResponse = HttpUtil.executeUrl("POST", (String) config.get(MelCloudBindingConstants.LOGIN_URL),
+                // null, stream, "application/json", 20000);
+
                 loginResponse = HttpUtil.executeUrl("POST", (String) config.get(MelCloudBindingConstants.LOGIN_URL),
                         null, stream, "application/json", 20000);
                 logger.debug("loginPage=" + loginResponse);
+                Gson gson = new Gson();
+                ServerDatasObject resp = gson.fromJson(loginResponse, ServerDatasObject.class);
+                logger.debug("ServerDataObject assigned");
 
             } catch (IOException e) {
                 loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
