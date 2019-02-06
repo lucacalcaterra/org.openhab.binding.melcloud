@@ -6,6 +6,6 @@ public class LoginResult {
     String error;
     String statusDescr;
     // Map<Integer, String> siteList = new HashMap<Integer, String>();
-    // ServerDatasHandler serverDatasHandler;
+    ConnectionHandler serverDatasHandler;
 
 }

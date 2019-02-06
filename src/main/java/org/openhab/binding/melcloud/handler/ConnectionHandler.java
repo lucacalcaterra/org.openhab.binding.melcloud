@@ -17,14 +17,15 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-public final class ConnectionHandler {
+public class ConnectionHandler {
     final static Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
     private final static Gson gson = new Gson();
     // private static boolean isConnected = false;
     // private static boolean isError = false;
     private static String errorDesc;
+    public LoginClientRes loginClientRes;
 
-    public static LoginResult Login(Configuration config) {
+    public LoginResult Login(Configuration config) {
         LoginResult loginResult = new LoginResult();
 
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
@@ -46,15 +47,13 @@ public final class ConnectionHandler {
                 // String content = MelCloudBindingConstants.WEBPASS;
                 String content = jsonReq.toString();
                 InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-                // loginResponse = HttpUtil.executeUrl("POST", (String) config.get(MelCloudBindingConstants.LOGIN_URL),
-                // null, stream, "application/json", 20000);
 
                 loginResponse = HttpUtil.executeUrl("POST", (String) config.get(MelCloudBindingConstants.LOGIN_URL),
                         null, stream, "application/json", 20000);
                 logger.debug("loginPage=" + loginResponse);
                 Gson gson = new Gson();
-                LoginClientRes logResult = gson.fromJson(loginResponse, LoginClientRes.class);
-                logger.debug("ServerDataObject assigned");
+                loginClientRes = gson.fromJson(loginResponse, LoginClientRes.class);
+                logger.debug("LoginClientRes assigned");
 
             } catch (IOException e) {
                 loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
