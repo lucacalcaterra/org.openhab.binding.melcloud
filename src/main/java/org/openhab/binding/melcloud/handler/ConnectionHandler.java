@@ -23,9 +23,9 @@ public class ConnectionHandler {
     // private static boolean isConnected = false;
     // private static boolean isError = false;
     private static String errorDesc;
-    public LoginClientRes loginClientRes;
+    private static LoginClientRes loginClientRes;
 
-    public LoginResult Login(Configuration config) {
+    public static LoginResult Login(Configuration config) {
         LoginResult loginResult = new LoginResult();
 
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null

@@ -22,4 +22,5 @@ Import-Package:
 Service-Component: OSGI-INF/*.xml
 Require-Bundle: org.eclipse.osgi,
  org.eclipse.smarthome.io.net,
- com.google.gson
+ com.google.gson,
+ org.eclipse.smarthome.config.discovery

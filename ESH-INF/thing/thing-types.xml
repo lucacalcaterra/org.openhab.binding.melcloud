@@ -4,13 +4,13 @@
 	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-	<!-- Sample Thing Type -->
-	<thing-type id="sample">
-		<label>Very Cool Thing</label>
-		<description>Sample thing for MelCloud Binding</description>
+	<!-- ACDevice Thing Type -->
+	<thing-type id="acDevice">
+		<label>A.C. Device</label>
+		<description>Air Conditioning Device </description>
 
 		<channels>
-			<channel id="channel1" typeId="sample-channel" />
+			<channel id="power" typeId="power-channel" />
 		</channels>
 
 		<config-description>
@@ -22,11 +22,11 @@
 
 	</thing-type>
 
-	<!-- Sample Channel Type -->
-	<channel-type id="sample-channel">
-		<item-type>Dimmer</item-type>
-		<label>Get going MelCloud Switch</label>
-		<description>Sample channel for MelCloud Binding</description>
+	<!-- Power Channel Type -->
+	<channel-type id="power-channel">
+		<item-type>Switch</item-type>
+		<label>Power</label>
+		<description>ON/OFF Power Status of Device</description>
 	</channel-type>
 
 </thing:thing-descriptions>

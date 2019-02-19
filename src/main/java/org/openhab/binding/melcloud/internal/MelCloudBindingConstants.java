@@ -12,6 +12,9 @@
  */
 package org.openhab.binding.melcloud.internal;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 
@@ -39,8 +42,11 @@ public class MelCloudBindingConstants {
     public static final ThingTypeUID LOGIN_BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "melCloudServer");
 
     // List of all Thing Type UIDs
-    public static final ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "sample");
+    public static final ThingTypeUID THING_TYPE_ACDEVICE = new ThingTypeUID(BINDING_ID, "acDevice");
 
     // List of all Channel ids
-    public static final String CHANNEL_1 = "channel1";
+    public static final String CHANNEL_POWER = "power-channel";
+
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_ACDEVICE);
+    public static final Set<ThingTypeUID> BRIDGE_THING_TYPES_UIDS = Collections.singleton(LOGIN_BRIDGE_THING_TYPE);
 }

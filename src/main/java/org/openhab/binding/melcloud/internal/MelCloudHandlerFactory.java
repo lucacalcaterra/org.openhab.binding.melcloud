@@ -14,9 +14,6 @@ package org.openhab.binding.melcloud.internal;
 
 import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 
-import java.util.Collections;
-import java.util.Set;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.thing.Bridge;
@@ -41,9 +38,6 @@ import org.slf4j.LoggerFactory;
 public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
     private final Logger logger = LoggerFactory.getLogger(MelCloudHandlerFactory.class);
 
-    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_SAMPLE);
-    private static final Set<ThingTypeUID> BRIDGE_THING_TYPES_UIDS = Collections.singleton(LOGIN_BRIDGE_THING_TYPE);
-
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
         return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID) || BRIDGE_THING_TYPES_UIDS.contains(thingTypeUID);
@@ -61,7 +55,7 @@ public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
                     handler.getID());
             return handler;
 
-        } else if (THING_TYPE_SAMPLE.equals(thingTypeUID)) {
+        } else if (THING_TYPE_ACDEVICE.equals(thingTypeUID)) {
             return new MelCloudHandler(thing);
         }
 
