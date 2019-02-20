@@ -1,14 +1,17 @@
-package org.openhab.binding.melcloud.handler;
+package org.openhab.binding.melcloud.internal.handler;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
 import org.openhab.binding.melcloud.json.LoginClientRes;
+import org.openhab.binding.melcloud.json.ServerDatasHandler;
+import org.openhab.binding.melcloud.json.ServerDatasObject;
 //import org.jsoup.Jsoup;
 // import org.openhab.binding.riscocloud.json.ServerDatasHandler;
 import org.slf4j.Logger;
@@ -24,14 +27,29 @@ public class ConnectionHandler {
     // private static boolean isError = false;
     private static String errorDesc;
     private static LoginClientRes loginClientRes;
+    private static ServerDatasHandler serverDatasHandler;
 
-    public static LoginResult Login(Configuration config) {
-        LoginResult loginResult = new LoginResult();
+    /**
+     * @return the serverDatasHandler
+     */
+    public static ServerDatasHandler getServerDatasHandler() {
+        return serverDatasHandler;
+    }
+
+    /**
+     * @param serverDatasHandler the serverDatasHandler to set
+     */
+    public static void setServerDatasHandler(ServerDatasHandler serverDatasHandler) {
+        ConnectionHandler.serverDatasHandler = serverDatasHandler;
+    }
+
+    public static LoginClientRes Login(Configuration config) {
+        // LoginResult loginResult = new LoginResult();
 
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
                 || config.get(MelCloudBindingConstants.LOGIN_PASS) == null) {
             errorDesc += " Parameter 'username' and 'webpass' must be configured.";
-            loginResult.statusDescr = "Missing credentials";
+            // loginResult.statusDescr = "Missing credentials";
         } else {
             try {
                 // Document document = null;
@@ -56,17 +74,41 @@ public class ConnectionHandler {
                 logger.debug("LoginClientRes assigned");
 
             } catch (IOException e) {
-                loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
-                loginResult.errorDetail = e.getMessage();
-                loginResult.statusDescr = "@text/offline.uri-error-1";
+                // loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
+                // loginResult.errorDetail = e.getMessage();
+                // loginResult.statusDescr = "@text/offline.uri-error-1";
 
             } catch (IllegalArgumentException e) {
-                loginResult.error += "caught exception !";
-                loginResult.errorDetail = e.getMessage();
-                loginResult.statusDescr = "@text/offline.uri-error-2";
+                // loginResult.error += "caught exception !";
+                // loginResult.errorDetail = e.getMessage();
+                // loginResult.statusDescr = "@text/offline.uri-error-2";
             }
         }
-        return loginResult;
+        return loginClientRes;
+    }
+
+    public static void pollDevices(LoginClientRes loginClientRes) {
+
+        try {
+            String response = null;
+
+            Properties headers = new Properties();
+            headers.put("X-MitsContextKey", loginClientRes.getLoginData().getContextKey());
+
+            response = HttpUtil.executeUrl("GET", "https://app.melcloud.com/Mitsubishi.Wifi.Client/User/ListDevices",
+                    headers, null, null, 20000);
+            logger.debug("get response for list devices");
+            // return serverDatasHandler;
+            Gson gson = new Gson();
+            ServerDatasObject s = gson.fromJson(response, ServerDatasObject.class);
+            logger.debug("get response for list devices in json class");
+
+        } catch (IOException e) {
+            logger.debug("IO exception on PollDevices: " + e);
+
+        } catch (IllegalArgumentException e) {
+            logger.debug("IllArguments exception on PollDevices: " + e);
+        }
     }
 
 }

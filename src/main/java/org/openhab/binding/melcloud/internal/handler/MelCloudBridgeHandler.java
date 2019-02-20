@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.openhab.binding.melcloud.handler;
+package org.openhab.binding.melcloud.internal.handler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +21,8 @@ import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
+import org.openhab.binding.melcloud.json.LoginClientRes;
+import org.openhab.binding.melcloud.json.ServerDatasHandler;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +39,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private final Logger logger = LoggerFactory.getLogger(MelCloudBridgeHandler.class);
 
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
-    private @Nullable LoginResult loginResult;
+    private @Nullable LoginClientRes loginClientRes;
+    private ServerDatasHandler serverDatasHandler;
 
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
+        serverDatasHandler = new ServerDatasHandler();
     }
 
     @Override
@@ -49,12 +53,13 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         logger.debug("Initializing MelCloud main bridge handler.");
         Configuration config = getThing().getConfiguration();
 
-        loginResult = ConnectionHandler.Login(config);
+        loginClientRes = ConnectionHandler.Login(config);
+        ConnectionHandler.pollDevices(loginClientRes);
 
         logger.debug("eseguito");
 
         // Updates the thing status accordingly
-        if (loginResult.error == null) {
+        if (loginClientRes.getErrorId() == null) {
             updateStatus(ThingStatus.ONLINE);
         } else {
             /*
@@ -62,7 +67,8 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
              * logger.debug("Disabling thing '{}': Error '{}': {}", getThing().getUID(), loginResult.error,
              * loginResult.errorDetail);
              */
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, "errore configurazione");
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+                    "Connection error: Check Config or network");
         }
     }
 

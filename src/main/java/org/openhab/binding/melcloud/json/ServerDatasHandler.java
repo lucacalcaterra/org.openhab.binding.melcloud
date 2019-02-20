@@ -10,9 +10,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.melcloud.handler;
+package org.openhab.binding.melcloud.json;
 
-import org.openhab.binding.melcloud.json.ServerDatasObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

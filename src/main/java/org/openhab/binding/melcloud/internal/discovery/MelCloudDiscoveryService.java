@@ -8,7 +8,7 @@
  */
 package org.openhab.binding.melcloud.internal.discovery;
 
-import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.SUPPORTED_THING_TYPES_UIDS;
+import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
@@ -17,7 +17,8 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
-import org.openhab.binding.melcloud.handler.MelCloudBridgeHandler;
+import org.eclipse.smarthome.core.thing.ThingUID;
+import org.openhab.binding.melcloud.internal.handler.MelCloudBridgeHandler;
 //import org.openhab.binding.riscocloud.handler.SiteBridgeHandler;
 import org.osgi.service.component.annotations.Modified;
 import org.slf4j.Logger;
@@ -74,6 +75,10 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
 
     private void createResults() {
         logger.debug("createResults()");
+        ThingUID bridgeUID = bridgeHandler.getThing().getUID();
+        if (bridgeHandler.getThing().getThingTypeUID().equals(LOGIN_BRIDGE_THING_TYPE)) {
+            logger.debug("bridge type");
+        }
 
     }
 

@@ -1,4 +1,4 @@
-package org.openhab.binding.melcloud.handler;
+package org.openhab.binding.melcloud.internal.handler;
 
 public class LoginResult {
 
