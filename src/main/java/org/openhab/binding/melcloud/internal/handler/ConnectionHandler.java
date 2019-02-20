@@ -87,7 +87,7 @@ public class ConnectionHandler {
         return loginClientRes;
     }
 
-    public static void pollDevices(LoginClientRes loginClientRes) {
+    public static ServerDatasObject pollDevices(LoginClientRes loginClientRes) {
 
         try {
             String response = null;
@@ -100,7 +100,9 @@ public class ConnectionHandler {
             logger.debug("get response for list devices");
             // return serverDatasHandler;
             Gson gson = new Gson();
-            ServerDatasObject s = gson.fromJson(response, ServerDatasObject.class);
+            ServerDatasHandler[] s = gson.fromJson(response, ServerDatasHandler[].class);
+            serverDatasHandler = s[0];
+
             logger.debug("get response for list devices in json class");
 
         } catch (IOException e) {
@@ -109,6 +111,8 @@ public class ConnectionHandler {
         } catch (IllegalArgumentException e) {
             logger.debug("IllArguments exception on PollDevices: " + e);
         }
+
+        return serverDatasHandler;
     }
 
 }

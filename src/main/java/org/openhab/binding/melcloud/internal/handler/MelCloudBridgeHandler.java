@@ -23,6 +23,7 @@ import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.json.LoginClientRes;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
+import org.openhab.binding.melcloud.json.Structure;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         Configuration config = getThing().getConfiguration();
 
         loginClientRes = ConnectionHandler.Login(config);
-        ConnectionHandler.pollDevices(loginClientRes);
+        Structure structure = ConnectionHandler.pollDevices(loginClientRes).getStructure();
 
         logger.debug("eseguito");
 
