@@ -39,13 +39,14 @@ public class MelCloudBindingConstants {
     public static final String LOGIN_LANG = "loginLanguageId";
     public static final String LOGIN_APPVERSION = "loginAppVersion";
     // List of Bridge Type UIDs
-    public static final ThingTypeUID LOGIN_BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "melCloudServer");
+    public static final ThingTypeUID LOGIN_BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "melCloudServerBridge");
 
     // List of all Thing Type UIDs
     public static final ThingTypeUID THING_TYPE_ACDEVICE = new ThingTypeUID(BINDING_ID, "acDevice");
 
     // List of all Channel ids
     public static final String CHANNEL_POWER = "power-channel";
+    public static final String CHANNEL_ROOM_TEMPERATURE = "roomTemperature-channel";
 
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_ACDEVICE);
     public static final Set<ThingTypeUID> BRIDGE_THING_TYPES_UIDS = Collections.singleton(LOGIN_BRIDGE_THING_TYPE);

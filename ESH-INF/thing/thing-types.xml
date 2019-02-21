@@ -6,19 +6,20 @@
 
 	<!-- ACDevice Thing Type -->
 	<thing-type id="acDevice">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="melCloudServerBridge" />
+		</supported-bridge-type-refs>
 		<label>A.C. Device</label>
 		<description>Air Conditioning Device </description>
 
 		<channels>
 			<channel id="power" typeId="power-channel" />
+			<channel id="roomTemperature" typeId="roomTemperature-channel" />
 		</channels>
 
-		<config-description>
-			<parameter name="config1" type="text" required="true">
-				<label>Sample parameter</label>
-				<description>This is a sample text configuration parameter.</description>
-			</parameter>
-		</config-description>
+		<!-- config for device... For now i don't need it -->
+		<!-- <config-description> <parameter name="config1" type="text" required="true"> <label>Sample parameter</label> <description>This 
+			is a sample text configuration parameter.</description> </parameter> </config-description> -->
 
 	</thing-type>
 
@@ -28,5 +29,11 @@
 		<label>Power</label>
 		<description>ON/OFF Power Status of Device</description>
 	</channel-type>
+	<channel-type id="roomTemperature-Channel">
+        <item-type>Number:Temperature</item-type>
+        <label>Room Temperature</label>
+        <description>Room Temperature</description>
+        <state readOnly="true" pattern="%.1f %unit%" />        
+    </channel-type>
 
 </thing:thing-descriptions>

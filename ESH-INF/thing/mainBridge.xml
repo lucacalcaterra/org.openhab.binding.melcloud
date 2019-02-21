@@ -4,7 +4,7 @@
     xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
     xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-    <bridge-type id="melCloudServer">
+    <bridge-type id="melCloudServerBridge">
         <label>MELCloud main bridge</label>
         <description>Connect to MelCloud server</description>
         
