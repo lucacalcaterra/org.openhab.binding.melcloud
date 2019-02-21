@@ -10,6 +10,7 @@ package org.openhab.binding.melcloud.internal.discovery;
 
 import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
+import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.openhab.binding.melcloud.internal.handler.MelCloudBridgeHandler;
 //import org.openhab.binding.riscocloud.handler.SiteBridgeHandler;
@@ -78,6 +80,21 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
         ThingUID bridgeUID = bridgeHandler.getThing().getUID();
         if (bridgeHandler.getThing().getThingTypeUID().equals(LOGIN_BRIDGE_THING_TYPE)) {
             logger.debug("bridge type");
+            // get device list
+            bridgeHandler.getDeviceList().forEach(device -> {
+                ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, bridgeHandler.getThing().getUID(),
+                        "Device-" + device.getDeviceID());
+                Map<String, Object> deviceProperties = new HashMap<>();
+                deviceProperties.put("deviceID", device.getDeviceID());
+
+                thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(device.getDeviceName())
+                        .withProperties(deviceProperties).withBridge(bridgeHandler.getThing().getUID()).build());
+
+                logger.debug("return Things belongs to MelCloud Bridge");
+            }
+
+            );
+            logger.debug("finish list of devices");
         }
 
     }

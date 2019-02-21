@@ -9,6 +9,7 @@
 package org.openhab.binding.melcloud.internal.handler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -21,9 +22,9 @@ import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
+import org.openhab.binding.melcloud.json.Device;
 import org.openhab.binding.melcloud.json.LoginClientRes;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
-import org.openhab.binding.melcloud.json.Structure;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,9 +56,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         Configuration config = getThing().getConfiguration();
 
         loginClientRes = ConnectionHandler.Login(config);
-        Structure structure = ConnectionHandler.pollDevices(loginClientRes).getStructure();
-
-        logger.debug("eseguito");
 
         // Updates the thing status accordingly
         if (loginClientRes.getErrorId() == null) {
@@ -71,6 +69,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                     "Connection error: Check Config or network");
         }
+
     }
 
     @Override
@@ -89,6 +88,10 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     public void setDiscoveryServiceRegs(Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs) {
         this.discoveryServiceRegs = discoveryServiceRegs;
+    }
+
+    public ServerDatasHandler getServerDatasHandler() {
+        return serverDatasHandler;
     }
 
     @Override
@@ -110,9 +113,17 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     public ThingUID getID() {
         return getThing().getUID();
     }
+
     /*
      * public boolean isValidConfig() {
      * return loginResult == null ? false : loginResult.error == null;
      * }
      */
+    public List<Device> getDeviceList() {
+
+        List<Device> devices = ConnectionHandler.pollDevices(loginClientRes).getStructure().getDevices();
+        logger.debug("got Device List...");
+        return devices;
+
+    }
 }

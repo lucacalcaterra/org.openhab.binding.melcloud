@@ -100,8 +100,8 @@ public class ConnectionHandler {
             logger.debug("get response for list devices");
             // return serverDatasHandler;
             Gson gson = new Gson();
-            ServerDatasHandler[] s = gson.fromJson(response, ServerDatasHandler[].class);
-            serverDatasHandler = s[0];
+            // ServerDatasHandler[] s = gson.fromJson(response, ServerDatasHandler[].class);
+            serverDatasHandler = gson.fromJson(response, ServerDatasHandler[].class)[0];
 
             logger.debug("get response for list devices in json class");
 
