@@ -12,8 +12,6 @@
  */
 package org.openhab.binding.melcloud.internal;
 
-import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -21,7 +19,6 @@ import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
-import org.eclipse.smarthome.core.types.RefreshType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,31 +42,33 @@ public class MelCloudHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        if (CHANNEL_POWER.equals(channelUID.getId())) {
-            if (command instanceof RefreshType) {
-                // TODO: handle data refresh
-            }
-
-            // TODO: handle command
-
-            // Note: if communication with thing fails for some reason,
-            // indicate that by setting the status with detail information:
-            // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
-            // "Could not control device at IP address x.x.x.x");
-        }
-
-        if (CHANNEL_ROOM_TEMPERATURE.equals(channelUID.getId())) {
-            if (command instanceof RefreshType) {
-                // TODO: handle data refresh
-            }
-
-            // TODO: handle command
-
-            // Note: if communication with thing fails for some reason,
-            // indicate that by setting the status with detail information:
-            // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
-            // "Could not control device at IP address x.x.x.x");
-        }
+        /*
+         * if (CHANNEL_POWER.equals(channelUID.getId())) {
+         * if (command instanceof RefreshType) {
+         * // TODO: handle data refresh
+         * }
+         * 
+         * // TODO: handle command
+         * 
+         * // Note: if communication with thing fails for some reason,
+         * // indicate that by setting the status with detail information:
+         * // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
+         * // "Could not control device at IP address x.x.x.x");
+         * }
+         * 
+         * if (CHANNEL_ROOM_TEMPERATURE.equals(channelUID.getId())) {
+         * if (command instanceof RefreshType) {
+         * // TODO: handle data refresh
+         * }
+         * 
+         * // TODO: handle command
+         * 
+         * // Note: if communication with thing fails for some reason,
+         * // indicate that by setting the status with detail information:
+         * // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
+         * // "Could not control device at IP address x.x.x.x");
+         * }
+         */
     }
 
     @Override

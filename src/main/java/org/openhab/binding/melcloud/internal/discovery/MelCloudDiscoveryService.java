@@ -81,7 +81,7 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
         if (bridgeHandler.getThing().getThingTypeUID().equals(LOGIN_BRIDGE_THING_TYPE)) {
             logger.debug("bridge type");
             // get device list
-            bridgeHandler.getDeviceList().forEach(device -> {
+            bridgeHandler.getdeviceList().forEach(device -> {
                 ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, bridgeHandler.getThing().getUID(),
                         "Device-" + device.getDeviceID());
                 Map<String, Object> deviceProperties = new HashMap<>();

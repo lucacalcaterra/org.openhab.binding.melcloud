@@ -43,6 +43,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
     private @Nullable LoginClientRes loginClientRes;
     private ServerDatasHandler serverDatasHandler;
+    private static @Nullable List<Device> deviceList;
 
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
@@ -69,6 +70,8 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                     "Connection error: Check Config or network");
         }
+
+        updateThings();
 
     }
 
@@ -119,11 +122,19 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
      * return loginResult == null ? false : loginResult.error == null;
      * }
      */
-    public List<Device> getDeviceList() {
+    public @Nullable List<Device> getdeviceList() {
 
-        List<Device> devices = ConnectionHandler.pollDevices(loginClientRes).getStructure().getDevices();
+        deviceList = ConnectionHandler.pollDevices(loginClientRes).getStructure().getDevices();
         logger.debug("got Device List...");
-        return devices;
+        return deviceList;
 
+    }
+
+    private void updateThings() {
+
+        this.getdeviceList();
+        getThing().getThings().forEach(thing -> {
+            logger.debug("update channels...");
+        });
     }
 }

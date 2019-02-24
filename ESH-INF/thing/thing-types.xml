@@ -29,7 +29,7 @@
 		<label>Power</label>
 		<description>ON/OFF Power Status of Device</description>
 	</channel-type>
-	<channel-type id="roomTemperature-Channel">
+	<channel-type id="roomTemperature-channel">
         <item-type>Number:Temperature</item-type>
         <label>Room Temperature</label>
         <description>Room Temperature</description>
