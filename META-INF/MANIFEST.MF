@@ -21,6 +21,6 @@ Import-Package:
  org.slf4j
 Service-Component: OSGI-INF/*.xml
 Require-Bundle: org.eclipse.osgi,
- org.eclipse.smarthome.io.net,
  com.google.gson,
- org.eclipse.smarthome.config.discovery
+ org.openhab.core.config.discovery,
+ org.openhab.core.io.net

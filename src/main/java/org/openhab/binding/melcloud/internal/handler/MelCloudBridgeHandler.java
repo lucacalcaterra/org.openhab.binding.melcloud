@@ -8,6 +8,8 @@
  */
 package org.openhab.binding.melcloud.internal.handler;
 
+import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.THING_TYPE_ACDEVICE;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,6 +137,9 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         this.getdeviceList();
         getThing().getThings().forEach(thing -> {
             logger.debug("update channels...");
+            if (thing.getThingTypeUID().equals(THING_TYPE_ACDEVICE)) {
+                // handler
+            }
         });
     }
 }
