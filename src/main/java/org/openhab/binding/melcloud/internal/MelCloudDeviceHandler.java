@@ -12,8 +12,11 @@
  */
 package org.openhab.binding.melcloud.internal;
 
+import java.util.List;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -23,20 +26,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link MelCloudHandler} is responsible for handling commands, which are
+ * The {@link MelCloudDeviceHandler} is responsible for handling commands, which are
  * sent to one of the channels.
  *
  * @author LucaCalcaterra - Initial contribution
  */
 @NonNullByDefault
-public class MelCloudHandler extends BaseThingHandler {
+public class MelCloudDeviceHandler extends BaseThingHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(MelCloudHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(MelCloudDeviceHandler.class);
 
     @Nullable
     private MelCloudConfiguration config;
 
-    public MelCloudHandler(Thing thing) {
+    public MelCloudDeviceHandler(Thing thing) {
         super(thing);
     }
 
@@ -47,22 +50,22 @@ public class MelCloudHandler extends BaseThingHandler {
          * if (command instanceof RefreshType) {
          * // TODO: handle data refresh
          * }
-         * 
+         *
          * // TODO: handle command
-         * 
+         *
          * // Note: if communication with thing fails for some reason,
          * // indicate that by setting the status with detail information:
          * // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
          * // "Could not control device at IP address x.x.x.x");
          * }
-         * 
+         *
          * if (CHANNEL_ROOM_TEMPERATURE.equals(channelUID.getId())) {
          * if (command instanceof RefreshType) {
          * // TODO: handle data refresh
          * }
-         * 
+         *
          * // TODO: handle command
-         * 
+         *
          * // Note: if communication with thing fails for some reason,
          * // indicate that by setting the status with detail information:
          * // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
@@ -108,4 +111,9 @@ public class MelCloudHandler extends BaseThingHandler {
         // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
         // "Can not access device as username and/or password are invalid");
     }
+
+    protected List<Channel> getChannels() {
+        return getThing().getChannels();
+    }
+
 }

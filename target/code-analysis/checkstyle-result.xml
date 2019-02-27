@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.1">
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\.classpath">
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\build.properties">
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\ESH-INF\binding\binding.xml">
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\ESH-INF\i18n\melcloud_xx_XX.properties">
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\ESH-INF\thing\mainBridge.xml">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="3" severity="warning" message="There were whitespace characters used for indentation. Please use tab characters instead" source="org.openhab.tools.analysis.checkstyle.OnlyTabIndentationInXmlFilesCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\ESH-INF\thing\thing-types.xml">
+<error line="33" severity="warning" message="There were whitespace characters used for indentation. Please use tab characters instead" source="org.openhab.tools.analysis.checkstyle.OnlyTabIndentationInXmlFilesCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\META-INF\MANIFEST.MF">
+<error line="0" severity="error" message="The MANIFEST.MF file must not contain any Require-Bundle entries. Instead, Import-Package must be used." source="org.openhab.tools.analysis.checkstyle.RequireBundleCheck"/>
+<error line="0" severity="error" message="The package org.openhab.binding.melcloud.json should be marked as &quot;internal&quot; if it is not exported." source="org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\OSGI-INF\.gitignore">
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\OSGI-INF\org.openhab.binding.melcloud.internal.MelCloudHandlerFactory.xml">
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\pom.xml">
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\README.md">
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\discovery\MelCloudDiscoveryService.java">
+<error line="2" severity="error" message="Header line doesn&apos;t match pattern ^ \* Copyright \(c\) 2010-2019 Contributors to the openHAB project$" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="99" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\handler\ConnectionHandler.java">
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="23" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="24" column="11" severity="info" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="24" column="25" severity="info" message="Name &apos;logger&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="25" column="19" severity="info" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="25" column="31" severity="info" message="Name &apos;gson&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="46" column="34" severity="info" message="Name &apos;Login&apos; must match pattern &apos;^[a-z][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.MethodNameCheck"/>
+<error line="75" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="80" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="91" severity="info" message="Remove empty line after opening brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="107" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="110" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\handler\LoginResult.java">
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="3" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\handler\MelCloudBridgeHandler.java">
+<error line="2" severity="error" message="Header line doesn&apos;t match pattern ^ \* Copyright \(c\) 2010-2019 Contributors to the openHAB project$" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="57" severity="info" message="Remove empty line after opening brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="77" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="128" severity="info" message="Remove empty line after opening brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="132" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="136" severity="info" message="Remove empty line after opening brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\MelCloudBindingConstants.java">
+<error line="2" severity="error" message="Header line doesn&apos;t match pattern ^ \* Copyright \(c\) 2010-2019 Contributors to the openHAB project$" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\MelCloudConfiguration.java">
+<error line="2" severity="error" message="Header line doesn&apos;t match pattern ^ \* Copyright \(c\) 2010-2019 Contributors to the openHAB project$" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\MelCloudHandler.java">
+<error line="2" severity="error" message="Header line doesn&apos;t match pattern ^ \* Copyright \(c\) 2010-2019 Contributors to the openHAB project$" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="48" severity="info" message="Comment matches to-do format &apos;(TODO)|(FIXME)&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+<error line="51" severity="info" message="Comment matches to-do format &apos;(TODO)|(FIXME)&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+<error line="61" severity="info" message="Comment matches to-do format &apos;(TODO)|(FIXME)&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+<error line="64" severity="info" message="Comment matches to-do format &apos;(TODO)|(FIXME)&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+<error line="79" severity="info" message="Comment matches to-do format &apos;(TODO)|(FIXME)&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\MelCloudHandlerFactory.java">
+<error line="2" severity="error" message="Header line doesn&apos;t match pattern ^ \* Copyright \(c\) 2010-2019 Contributors to the openHAB project$" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="54" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="67" severity="info" message="Remove empty line before closing brace" source="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck"/>
+<error line="76" severity="info" message="Comment matches to-do format &apos;(TODO)|(FIXME)&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\Device.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="9" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="9" severity="warning" message="Missing Javadoc comment." source="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\DeviceProps.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="8" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="8" severity="warning" message="Missing Javadoc comment." source="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\LoginClientRes.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="8" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="8" severity="warning" message="Missing Javadoc comment." source="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\LoginData.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="6" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="6" severity="warning" message="Missing Javadoc comment." source="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\Preset.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="6" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="6" severity="warning" message="Missing Javadoc comment." source="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\QuantizedCoordinates.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="6" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="6" severity="warning" message="Missing Javadoc comment." source="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\ServerDatasHandler.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="2" severity="error" message="Header line doesn&apos;t match pattern ^ \* Copyright \(c\) 2010-2019 Contributors to the openHAB project$" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="28" column="19" severity="info" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="28" column="33" severity="info" message="Name &apos;logger&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\ServerDatasObject.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="6" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="6" severity="warning" message="Missing Javadoc comment." source="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck"/>
+</file>
+<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\json\Structure.java">
+<error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="1" severity="error" message="Header is missing" source="org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck"/>
+<error line="8" severity="error" message="An author tag is missing" source="org.openhab.tools.analysis.checkstyle.AuthorTagCheck"/>
+<error line="8" severity="warning" message="Missing Javadoc comment." source="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck"/>
+</file>
+</checkstyle>

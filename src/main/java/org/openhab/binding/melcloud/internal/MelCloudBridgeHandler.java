@@ -6,9 +6,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.openhab.binding.melcloud.internal.handler;
+package org.openhab.binding.melcloud.internal;
 
-import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.THING_TYPE_ACDEVICE;
+import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +24,7 @@ import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
+import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
 import org.openhab.binding.melcloud.json.Device;
 import org.openhab.binding.melcloud.json.LoginClientRes;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
@@ -136,9 +137,20 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
         this.getdeviceList();
         getThing().getThings().forEach(thing -> {
+
             logger.debug("update channels...");
             if (thing.getThingTypeUID().equals(THING_TYPE_ACDEVICE)) {
-                // handler
+                MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
+                updateStatus(ThingStatus.ONLINE);
+                devicehandler.getChannels().forEach(channel -> {
+                    logger.debug("Update channel '{}': with type '{}': and label {} : and id {}", channel.getUID(),
+                            channel.getChannelTypeUID(), channel.getLabel(), channel.getUID().getId());
+                    switch (channel.getUID().getId()) {
+                        case CHANNEL_POWER:
+                            // updateState(channel.getUID(),serrverDatasHandler.)
+                            logger.debug("check");
+                    }
+                });
             }
         });
     }

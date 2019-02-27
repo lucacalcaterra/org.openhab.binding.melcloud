@@ -45,8 +45,8 @@ public class MelCloudBindingConstants {
     public static final ThingTypeUID THING_TYPE_ACDEVICE = new ThingTypeUID(BINDING_ID, "acDevice");
 
     // List of all Channel ids
-    public static final String CHANNEL_POWER = "power-channel";
-    public static final String CHANNEL_ROOM_TEMPERATURE = "roomTemperature-channel";
+    public static final String CHANNEL_POWER = "power";
+    public static final String CHANNEL_ROOM_TEMPERATURE = "roomTemperature";
 
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_ACDEVICE);
     public static final Set<ThingTypeUID> BRIDGE_THING_TYPES_UIDS = Collections.singleton(LOGIN_BRIDGE_THING_TYPE);

@@ -29,7 +29,6 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.openhab.binding.melcloud.internal.discovery.MelCloudDiscoveryService;
-import org.openhab.binding.melcloud.internal.handler.MelCloudBridgeHandler;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
@@ -66,7 +65,7 @@ public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
             return handler;
 
         } else if (THING_TYPE_ACDEVICE.equals(thingTypeUID)) {
-            return new MelCloudHandler(thing);
+            return new MelCloudDeviceHandler(thing);
         }
 
         return null;
