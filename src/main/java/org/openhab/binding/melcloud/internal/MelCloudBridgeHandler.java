@@ -140,7 +140,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
             logger.debug("update channels...");
             if (thing.getThingTypeUID().equals(THING_TYPE_ACDEVICE)) {
-                MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
+                MelCloudDeviceHandler devicehandler = (MelCloudDeviceHandler) thing.getHandler();
                 updateStatus(ThingStatus.ONLINE);
                 devicehandler.getChannels().forEach(channel -> {
                     logger.debug("Update channel '{}': with type '{}': and label {} : and id {}", channel.getUID(),
