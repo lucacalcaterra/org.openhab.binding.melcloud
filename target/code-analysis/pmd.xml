@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<pmd version="5.8.1" timestamp="2019-02-27T16:31:16.522">
-<file name="C:\Users\assist\openhab-master2\git\openhab2-addons\addons\binding\org.openhab.binding.melcloud\src\main\java\org\openhab\binding\melcloud\internal\handler\MelCloudBridgeHandler.java">
-<violation beginline="140" endline="142" begincolumn="70" endcolumn="13" rule="EmptyIfStmt" ruleset="Empty Code" package="org.openhab.binding.melcloud.internal.handler" class="MelCloudBridgeHandler" method="updateThings" externalInfoUrl="https://pmd.github.io/pmd-5.8.1/pmd-java/rules/java/empty.html#EmptyIfStmt" priority="3">
-Avoid empty if statements
-</violation>
-</file>
-</pmd>
