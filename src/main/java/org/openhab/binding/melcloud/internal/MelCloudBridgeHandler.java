@@ -8,7 +8,7 @@
  */
 package org.openhab.binding.melcloud.internal;
 
-import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
+import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.THING_TYPE_ACDEVICE;
 
 import java.util.HashMap;
 import java.util.List;
@@ -133,25 +133,62 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     }
 
+    public @Nullable Device getdeviceById(int id) {
+        for (Device device : deviceList) {
+            if (device.getDeviceID().equals(id)) {
+                return device;
+            }
+        }
+        return null;
+    }
+
     private void updateThings() {
 
         this.getdeviceList();
         getThing().getThings().forEach(thing -> {
 
-            logger.debug("update channels...");
             if (thing.getThingTypeUID().equals(THING_TYPE_ACDEVICE)) {
-                MelCloudDeviceHandler devicehandler = (MelCloudDeviceHandler) thing.getHandler();
-                updateStatus(ThingStatus.ONLINE);
-                devicehandler.getChannels().forEach(channel -> {
-                    logger.debug("Update channel '{}': with type '{}': and label {} : and id {}", channel.getUID(),
-                            channel.getChannelTypeUID(), channel.getLabel(), channel.getUID().getId());
-                    switch (channel.getUID().getId()) {
-                        case CHANNEL_POWER:
-                            // updateState(channel.getUID(),serrverDatasHandler.)
-                            logger.debug("check");
-                    }
-                });
+
+                MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
+                logger.debug("test");
+                Device device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
+                if (device != null) {
+                    devicehandler.updateChannels(device);
+                }
             }
+
+            /*
+             * final MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
+             * logger.debug("update channels...");
+             * if (thing.getThingTypeUID().equals(THING_TYPE_ACDEVICE)) {
+             *
+             * // MelCloudDeviceHandler devicehandler = (MelCloudDeviceHandler) thing.getHandler();
+             * Device device = new Device();
+             * for (Device d : deviceList) {
+             *
+             * }
+             *
+             * // updateStatus(ThingStatus.ONLINE);
+             * devicehandler.getChannels().forEach(channel -> {
+             * // logger.debug("Update channel '{}': with type '{}': and label {} : and id {}", channel.getUID(),
+             * // channel.getChannelTypeUID(), channel.getLabel(), channel.getUID().getId());
+             * switch (channel.getUID().getId()) {
+             * case CHANNEL_POWER:
+             * // updateState(channel.getUID(),serrverDatasHandler.)
+             *
+             * logger.debug("check");
+             * }
+             * });
+             *
+             * for (Channel channel : devicehandler.getChannels()) {
+             * switch (channel.getUID().getId()) {
+             * case CHANNEL_POWER:
+             * updateState(channel.getUID(), OnOffType.ON);
+             * }
+             * }
+             * }
+             */
         });
+
     }
 }

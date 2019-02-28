@@ -85,10 +85,11 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
                 ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, bridgeHandler.getThing().getUID(),
                         "Device-" + device.getDeviceID());
                 Map<String, Object> deviceProperties = new HashMap<>();
-                deviceProperties.put("deviceID", device.getDeviceID());
+                deviceProperties.put("deviceID", device.getDeviceID().toString());
 
                 thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(device.getDeviceName())
-                        .withProperties(deviceProperties).withBridge(bridgeHandler.getThing().getUID()).build());
+                        .withProperties(deviceProperties).withRepresentationProperty(device.getDeviceID().toString())
+                        .withBridge(bridgeHandler.getThing().getUID()).build());
 
                 logger.debug("return Things belongs to MelCloud Bridge");
             }

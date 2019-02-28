@@ -12,16 +12,21 @@
  */
 package org.openhab.binding.melcloud.internal;
 
+import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
+
 import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.smarthome.core.library.types.DecimalType;
+import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
+import org.openhab.binding.melcloud.json.Device;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,6 +119,23 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
     protected List<Channel> getChannels() {
         return getThing().getChannels();
+    }
+
+    public void updateChannels(Device device) {
+
+        for (Channel channel : getThing().getChannels()) {
+            switch (channel.getUID().getId()) {
+                case CHANNEL_POWER:
+                    updateState(CHANNEL_POWER, OnOffType.ON);
+                    break;
+                case CHANNEL_ROOM_TEMPERATURE:
+                    updateState(CHANNEL_ROOM_TEMPERATURE,
+                            new DecimalType(device.getDeviceProps().getRoomTemperature()));
+                    break;
+
+            }
+
+        }
     }
 
 }

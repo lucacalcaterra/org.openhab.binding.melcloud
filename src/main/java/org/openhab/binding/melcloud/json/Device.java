@@ -417,11 +417,11 @@ public class Device {
         this.serialNumber = serialNumber;
     }
 
-    public DeviceProps getDevice() {
+    public DeviceProps getDeviceProps() {
         return device;
     }
 
-    public void setDevice(DeviceProps device) {
+    public void setDeviceProps(DeviceProps device) {
         this.device = device;
     }
 
