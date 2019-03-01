@@ -65,7 +65,8 @@ public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
             return handler;
 
         } else if (THING_TYPE_ACDEVICE.equals(thingTypeUID)) {
-            return new MelCloudDeviceHandler(thing);
+            MelCloudDeviceHandler handler = new MelCloudDeviceHandler(thing);
+            return handler;
         }
 
         return null;

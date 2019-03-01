@@ -8,17 +8,19 @@
  */
 package org.openhab.binding.melcloud.internal;
 
-import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.THING_TYPE_ACDEVICE;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.core.thing.Bridge;
+import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
+import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.ThingUID;
@@ -46,6 +48,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
     private @Nullable LoginClientRes loginClientRes;
     private ServerDatasHandler serverDatasHandler;
+    private @Nullable ScheduledFuture<?> refreshJob;
     private static @Nullable List<Device> deviceList;
 
     public MelCloudBridgeHandler(Bridge bridge) {
@@ -74,7 +77,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                     "Connection error: Check Config or network");
         }
 
-        updateThings();
+        startAutomaticRefresh();
 
     }
 
@@ -127,7 +130,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
      */
     public @Nullable List<Device> getdeviceList() {
 
-        deviceList = ConnectionHandler.pollDevices(loginClientRes).getStructure().getDevices();
         logger.debug("got Device List...");
         return deviceList;
 
@@ -142,53 +144,50 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         return null;
     }
 
+    /**
+     * Start the job refreshing the data
+     */
+    private void startAutomaticRefresh() {
+        if (refreshJob == null || refreshJob.isCancelled()) {
+            Runnable runnable = () -> {
+                try {
+                    updateThings();
+                } catch (Exception e) {
+                    logger.error("Exception occurred during execution: {}", e.getMessage(), e);
+                }
+            };
+
+            int delay = 10;
+            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 0, delay, TimeUnit.SECONDS);
+        }
+    }
+
     private void updateThings() {
 
-        this.getdeviceList();
-        getThing().getThings().forEach(thing -> {
+        deviceList = ConnectionHandler.pollDevices(loginClientRes).getStructure().getDevices();
 
-            if (thing.getThingTypeUID().equals(THING_TYPE_ACDEVICE)) {
+        for (Thing thing : getThing().getThings()) {
+            MelCloudDeviceHandler handler = (MelCloudDeviceHandler) thing.getHandler();
+            if (handler instanceof MelCloudDeviceHandler) {
+                // MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
+                handler.updateStatus(ThingStatus.ONLINE);
 
-                MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
                 logger.debug("test");
                 Device device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
                 if (device != null) {
-                    devicehandler.updateChannels(device);
+                    for (Channel channel : handler.getChannels()) {
+                        handler.updateChannel(channel.getUID().getId(), device);
+                        /*
+                         * switch (channel.getUID().getId()) {
+                         * case CHANNEL_POWER:
+                         * updateState(channel.getUID(), OnOffType.ON);
+                         *
+                         * }
+                         */
+                    }
                 }
+
             }
-
-            /*
-             * final MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
-             * logger.debug("update channels...");
-             * if (thing.getThingTypeUID().equals(THING_TYPE_ACDEVICE)) {
-             *
-             * // MelCloudDeviceHandler devicehandler = (MelCloudDeviceHandler) thing.getHandler();
-             * Device device = new Device();
-             * for (Device d : deviceList) {
-             *
-             * }
-             *
-             * // updateStatus(ThingStatus.ONLINE);
-             * devicehandler.getChannels().forEach(channel -> {
-             * // logger.debug("Update channel '{}': with type '{}': and label {} : and id {}", channel.getUID(),
-             * // channel.getChannelTypeUID(), channel.getLabel(), channel.getUID().getId());
-             * switch (channel.getUID().getId()) {
-             * case CHANNEL_POWER:
-             * // updateState(channel.getUID(),serrverDatasHandler.)
-             *
-             * logger.debug("check");
-             * }
-             * });
-             *
-             * for (Channel channel : devicehandler.getChannels()) {
-             * switch (channel.getUID().getId()) {
-             * case CHANNEL_POWER:
-             * updateState(channel.getUID(), OnOffType.ON);
-             * }
-             * }
-             * }
-             */
-        });
-
+        }
     }
 }

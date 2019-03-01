@@ -12,8 +12,6 @@ import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
 import org.openhab.binding.melcloud.json.LoginClientRes;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
 import org.openhab.binding.melcloud.json.ServerDatasObject;
-//import org.jsoup.Jsoup;
-// import org.openhab.binding.riscocloud.json.ServerDatasHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
