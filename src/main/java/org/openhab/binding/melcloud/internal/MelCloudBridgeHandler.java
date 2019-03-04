@@ -27,7 +27,6 @@ import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
-import org.eclipse.smarthome.core.thing.ThingStatusInfo;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
@@ -86,12 +85,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                     "Connection error: Check Config or network");
         }
         startAutomaticRefresh();
-    }
-
-    @Override
-    public void bridgeStatusChanged(ThingStatusInfo bridgeStatusInfo) {
-        // TODO Auto-generated method stub
-        super.bridgeStatusChanged(bridgeStatusInfo);
     }
 
     @Override

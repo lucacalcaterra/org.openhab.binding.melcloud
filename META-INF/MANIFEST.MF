@@ -22,5 +22,5 @@ Import-Package:
  org.osgi.framework,
  org.slf4j
 Service-Component: OSGI-INF/*.xml
-Export-Package: org.openhab.binding.melcloud.json;x-internal:=true
+Export-Package: org.openhab.binding.melcloud.json
 
