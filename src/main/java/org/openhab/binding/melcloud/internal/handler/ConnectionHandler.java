@@ -19,11 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class ConnectionHandler {
-    final static Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
-    private final static Gson gson = new Gson();
-    // private static boolean isConnected = false;
-    // private static boolean isError = false;
-    private static String errorDesc;
+    private final static Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
     private static LoginClientRes loginClientRes;
     private static ServerDatasHandler serverDatasHandler;
 
@@ -46,8 +42,7 @@ public class ConnectionHandler {
 
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
                 || config.get(MelCloudBindingConstants.LOGIN_PASS) == null) {
-            errorDesc += " Parameter 'username' and 'webpass' must be configured.";
-            // loginResult.statusDescr = "Missing credentials";
+            logger.debug("null parameter error, check config...!");
         } else {
             try {
                 // Document document = null;
@@ -70,12 +65,10 @@ public class ConnectionHandler {
                 Gson gson = new Gson();
                 loginClientRes = gson.fromJson(loginResponse, LoginClientRes.class);
                 logger.debug("LoginClientRes assigned");
-
             } catch (IOException e) {
                 // loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
                 // loginResult.errorDetail = e.getMessage();
                 // loginResult.statusDescr = "@text/offline.uri-error-1";
-
             } catch (IllegalArgumentException e) {
                 // loginResult.error += "caught exception !";
                 // loginResult.errorDetail = e.getMessage();
@@ -86,7 +79,6 @@ public class ConnectionHandler {
     }
 
     public static ServerDatasObject pollDevices(LoginClientRes loginClientRes) {
-
         try {
             String response = null;
 
@@ -105,12 +97,9 @@ public class ConnectionHandler {
 
         } catch (IOException e) {
             logger.debug("IO exception on PollDevices: " + e);
-
         } catch (IllegalArgumentException e) {
             logger.debug("IllArguments exception on PollDevices: " + e);
         }
-
         return serverDatasHandler;
     }
-
 }

@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <thing:thing-descriptions bindingId="melcloud"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
-    xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-    <bridge-type id="melCloudServerBridge">
-        <label>MELCloud main bridge</label>
-        <description>Connect to MelCloud server</description>
-        
-        <config-description>
-            <parameter name="username" type="text" required="true">
-                <label>Username</label>
-                <description>Email address</description>
-            </parameter>
-            <parameter name="webpass" type="text" required="true">
-                <label>Password</label>
-                <description>WEB password</description>
-            </parameter>
-<!--             <parameter name="webUIUrl" type="text" required="true"> -->
-<!--                 <label>url to MEL Cloud WEB UI</label> -->
-<!--                 <description>Change this only if you know what you are doing.</description> -->
-<!--                 <default>https://app.melcloud.com/</default> -->
-<!--             </parameter> -->
-            <parameter name="loginUrl" type="text" required="true">
-                <label>url to MEL Cloud WEB UI</label>
-                <description>Change this only if you know what you are doing.</description>
-                <default>https://app.melcloud.com/Mitsubishi.Wifi.Client/Login/ClientLogin</default>
-            </parameter>
-            <parameter name="loginLanguageId" type="integer" required="true">
-                <label>id LanguageI</label>
-                <description>Change the Language Id (I.e. 0 for English, 19 For Italian)</description>
-                <default>19</default>
-            </parameter>
-            <parameter name="loginAppVersion" type="text" required="true">
-                <label>App Version (of WebClient)-</label>
-                <description>Not Change it</description>
-                <default>1.17.5.0</default>
-            </parameter>
-                       
-            
-        </config-description>
+	<bridge-type id="melCloudServerBridge">
+		<label>MELCloud main bridge</label>
+		<description>Connect to MelCloud server</description>
 
-    </bridge-type>
+		<config-description>
+			<parameter name="username" type="text" required="true">
+				<label>Username</label>
+				<description>Email address</description>
+			</parameter>
+			<parameter name="webpass" type="text" required="true">
+				<label>Password</label>
+				<description>WEB password</description>
+			</parameter>
+			<!-- <parameter name="webUIUrl" type="text" required="true"> -->
+			<!-- <label>url to MEL Cloud WEB UI</label> -->
+			<!-- <description>Change this only if you know what you are doing.</description> -->
+			<!-- <default>https://app.melcloud.com/</default> -->
+			<!-- </parameter> -->
+			<parameter name="loginUrl" type="text" required="true">
+				<label>url to MEL Cloud WEB UI</label>
+				<description>Change this only if you know what you are doing.</description>
+				<default>https://app.melcloud.com/Mitsubishi.Wifi.Client/Login/ClientLogin</default>
+			</parameter>
+			<parameter name="loginLanguageId" type="integer" required="true">
+				<label>id LanguageI</label>
+				<description>Change the Language Id (I.e. 0 for English, 19 For Italian)</description>
+				<default>19</default>
+			</parameter>
+			<parameter name="loginAppVersion" type="text" required="true">
+				<label>App Version (of WebClient)-</label>
+				<description>Not Change it</description>
+				<default>1.17.5.0</default>
+			</parameter>
+
+
+		</config-description>
+
+	</bridge-type>
 
 </thing:thing-descriptions>

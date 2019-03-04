@@ -1,10 +1,14 @@
 /**
- * Copyright (c) 2010-2018 by the respective copyright holders.
+ * Copyright (c) 2010-2019 Contributors to the openHAB project
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * See the NOTICE file(s) distributed with this work for additional
+ * information.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.melcloud.internal.discovery;
 
@@ -13,7 +17,6 @@ import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
@@ -28,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link MelCloudDiscoveryService} creates things based on the configured location.
  *
- * @author Sébastien Cantineau - Initial Contribution
+ * @author Luca Calcaterra - Initial Contribution
  */
 @NonNullByDefault
 public class MelCloudDiscoveryService extends AbstractDiscoveryService {
@@ -64,16 +67,17 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
         createResults();
     }
 
-    @Override
-    protected void startBackgroundDiscovery() {
-        if (discoveryJob == null) {
-            discoveryJob = scheduler.scheduleWithFixedDelay(() -> {
-                createResults();
-            }, 0, 24, TimeUnit.HOURS);
-            logger.debug("Scheduled MelCloud-changed job every {} hours", 24);
-        }
-    }
-
+    /*
+     * @Override
+     * protected void startBackgroundDiscovery() {
+     * if (discoveryJob == null) {
+     * discoveryJob = scheduler.scheduleWithFixedDelay(() -> {
+     * createResults();
+     * }, 0, 24, TimeUnit.HOURS);
+     * logger.debug("Scheduled MelCloud-changed job every {} hours", 24);
+     * }
+     * }
+     */
     private void createResults() {
         logger.debug("createResults()");
         ThingUID bridgeUID = bridgeHandler.getThing().getUID();
@@ -88,7 +92,7 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
 
                 thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(device.getDeviceName())
                         .withProperties(deviceProperties).withRepresentationProperty(device.getDeviceID().toString())
-                        .withBridge(bridgeHandler.getThing().getUID()).build());
+                        .withBridge(bridgeUID).build());
 
                 logger.debug("return Things belongs to MelCloud Bridge");
             }

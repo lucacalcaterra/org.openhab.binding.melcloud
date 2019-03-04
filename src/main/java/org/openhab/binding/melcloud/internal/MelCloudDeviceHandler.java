@@ -1,8 +1,8 @@
 /**
- * Copyright (c) 2014,2019 by the respective copyright holders.
+ * Copyright (c) 2010-2019 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
- * information regarding copyright ownership.
+ * information.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -25,6 +25,7 @@ import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
+import org.eclipse.smarthome.core.thing.ThingStatusInfo;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.json.Device;
@@ -39,6 +40,12 @@ import org.slf4j.LoggerFactory;
  */
 @NonNullByDefault
 public class MelCloudDeviceHandler extends BaseThingHandler {
+
+    @Override
+    public void bridgeStatusChanged(ThingStatusInfo bridgeStatusInfo) {
+        // TODO Auto-generated method stub
+        super.bridgeStatusChanged(bridgeStatusInfo);
+    }
 
     private final Logger logger = LoggerFactory.getLogger(MelCloudDeviceHandler.class);
 
@@ -56,10 +63,10 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
         /*
          * if (CHANNEL_POWER.equals(channelUID.getId())) {
          * if (command instanceof RefreshType) {
-         * // TODO: handle data refresh
+         * // (TODO): handle data refresh
          * }
          *
-         * // TODO: handle command
+         * // (TODO): handle command
          *
          * // Note: if communication with thing fails for some reason,
          * // indicate that by setting the status with detail information:
@@ -69,10 +76,10 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
          *
          * if (CHANNEL_ROOM_TEMPERATURE.equals(channelUID.getId())) {
          * if (command instanceof RefreshType) {
-         * // TODO: handle data refresh
+         * // (TODO): handle data refresh
          * }
          *
-         * // TODO: handle command
+         * // (TODO): handle command
          *
          * // Note: if communication with thing fails for some reason,
          * // indicate that by setting the status with detail information:
@@ -98,12 +105,12 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
         }
 
         if (errorMsg == null) {
-            // updateStatus(ThingStatus.ONLINE);
+            updateStatus(ThingStatus.UNKNOWN);
         } else {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, errorMsg);
         }
 
-        // TODO: Initialize the handler.
+        // (TODO): Initialize the handler.
         // The framework requires you to return from this method quickly. Also, before leaving this method a thing
         // status from one of ONLINE, OFFLINE or UNKNOWN must be set. This might already be the real thing status in
         // case you can decide it directly.
@@ -143,7 +150,6 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     }
 
     public synchronized void updateChannel(String channelId, Device device) {
-
         switch (channelId) {
             case CHANNEL_POWER:
                 updateState(CHANNEL_POWER, OnOffType.ON);
@@ -151,15 +157,12 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
             case CHANNEL_ROOM_TEMPERATURE:
                 updateState(CHANNEL_ROOM_TEMPERATURE, new DecimalType(device.getDeviceProps().getRoomTemperature()));
                 break;
-
         }
-
     }
 
     @Override
     protected void updateStatus(ThingStatus status) {
-        // TODO Auto-generated method stub
+        // (TODO) Auto-generated method stub
         super.updateStatus(status);
     }
-
 }

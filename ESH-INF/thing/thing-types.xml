@@ -30,10 +30,10 @@
 		<description>ON/OFF Power Status of Device</description>
 	</channel-type>
 	<channel-type id="roomTemperature-channel">
-        <item-type>Number:Temperature</item-type>
-        <label>Room Temperature</label>
-        <description>Room Temperature</description>
-        <state readOnly="true" pattern="%.1f %unit%" />        
-    </channel-type>
+		<item-type>Number:Temperature</item-type>
+		<label>Room Temperature</label>
+		<description>Room Temperature</description>
+		<state readOnly="true" pattern="%.1f %unit%" />
+	</channel-type>
 
 </thing:thing-descriptions>

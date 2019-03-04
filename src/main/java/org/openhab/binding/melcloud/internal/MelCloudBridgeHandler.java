@@ -1,10 +1,14 @@
 /**
- * Copyright (c) 2010-2018 by the respective copyright holders.
+ * Copyright (c) 2010-2019 Contributors to the openHAB project
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * See the NOTICE file(s) distributed with this work for additional
+ * information.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.melcloud.internal;
 
@@ -23,6 +27,7 @@ import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
+import org.eclipse.smarthome.core.thing.ThingStatusInfo;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
@@ -58,15 +63,19 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     @Override
     public void initialize() {
-
         logger.debug("Initializing MelCloud main bridge handler.");
         Configuration config = getThing().getConfiguration();
+        updateStatus(ThingStatus.UNKNOWN);
 
         loginClientRes = ConnectionHandler.Login(config);
 
         // Updates the thing status accordingly
         if (loginClientRes.getErrorId() == null) {
-            updateStatus(ThingStatus.ONLINE);
+            try {
+                updateStatus(ThingStatus.ONLINE);
+            } catch (Exception e) {
+                logger.debug("Illegal status transition to ONLINE");
+            }
         } else {
             /*
              * loginResult.error = loginResult.error.trim();
@@ -76,9 +85,13 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                     "Connection error: Check Config or network");
         }
-
         startAutomaticRefresh();
+    }
 
+    @Override
+    public void bridgeStatusChanged(ThingStatusInfo bridgeStatusInfo) {
+        // TODO Auto-generated method stub
+        super.bridgeStatusChanged(bridgeStatusInfo);
     }
 
     @Override
@@ -123,16 +136,10 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         return getThing().getUID();
     }
 
-    /*
-     * public boolean isValidConfig() {
-     * return loginResult == null ? false : loginResult.error == null;
-     * }
-     */
     public @Nullable List<Device> getdeviceList() {
 
         logger.debug("got Device List...");
         return deviceList;
-
     }
 
     public @Nullable Device getdeviceById(int id) {
@@ -170,9 +177,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             MelCloudDeviceHandler handler = (MelCloudDeviceHandler) thing.getHandler();
             if (handler instanceof MelCloudDeviceHandler) {
                 // MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
-                handler.updateStatus(ThingStatus.ONLINE);
+                try {
+                    handler.updateStatus(ThingStatus.ONLINE);
+                } catch (Exception e) {
+                    logger.debug("Illegal status transition to ONLINE of thing");
+                }
 
-                logger.debug("test");
                 Device device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
                 if (device != null) {
                     for (Channel channel : handler.getChannels()) {
@@ -186,7 +196,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                          */
                     }
                 }
-
             }
         }
     }

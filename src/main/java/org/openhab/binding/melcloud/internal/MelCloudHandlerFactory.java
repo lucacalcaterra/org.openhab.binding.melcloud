@@ -1,8 +1,8 @@
 /**
- * Copyright (c) 2014,2019 by the respective copyright holders.
+ * Copyright (c) 2010-2019 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
- * information regarding copyright ownership.
+ * information.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -72,8 +72,8 @@ public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
         return null;
     }
 
-    private void registerDiscoveryService(MelCloudBridgeHandler bridgeHandler) {
-        // TODO Auto-generated method stub
+    private synchronized void registerDiscoveryService(MelCloudBridgeHandler bridgeHandler) {
+        // (TODO) Auto-generated method stub
         MelCloudDiscoveryService discoveryService = new MelCloudDiscoveryService(bridgeHandler);
         bridgeHandler.getDiscoveryServiceRegs().put(bridgeHandler.getThing().getUID(), bundleContext
                 .registerService(DiscoveryService.class.getName(), discoveryService, new Hashtable<String, Object>()));
