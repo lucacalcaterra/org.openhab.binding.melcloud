@@ -33,6 +33,7 @@ import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
 import org.openhab.binding.melcloud.json.DeviceStatusResponse;
+import org.openhab.binding.melcloud.json.ListDevicesResponse;
 import org.openhab.binding.melcloud.json.LoginClientResponse;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
 import org.osgi.framework.ServiceRegistration;
@@ -52,13 +53,13 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
     private @Nullable LoginClientResponse loginClientRes;
-    private ServerDatasHandler serverDatasHandler;
+    private ListDevicesResponse listDevices;
     private @Nullable ScheduledFuture<?> refreshJob;
     private static @Nullable List<DeviceStatusResponse> deviceList;
 
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
-        serverDatasHandler = new ServerDatasHandler();
+        listDevices = new ServerDatasHandler();
     }
 
     @Override
@@ -106,8 +107,8 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         this.discoveryServiceRegs = discoveryServiceRegs;
     }
 
-    public ServerDatasHandler getServerDatasHandler() {
-        return serverDatasHandler;
+    public ListDevicesResponse getListDevices() {
+        return listDevices;
     }
 
     @Override
