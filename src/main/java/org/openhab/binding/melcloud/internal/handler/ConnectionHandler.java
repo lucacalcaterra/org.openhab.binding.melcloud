@@ -21,7 +21,7 @@ import java.util.Properties;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
-import org.openhab.binding.melcloud.json.LoginClientRes;
+import org.openhab.binding.melcloud.json.LoginClientResponse;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
 import org.openhab.binding.melcloud.json.ListDevicesResponse;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import com.google.gson.JsonObject;
  */
 public class ConnectionHandler {
     private final static Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
-    private static LoginClientRes loginClientRes;
+    private static LoginClientResponse loginClientRes;
     private static ServerDatasHandler serverDatasHandler;
 
     /**
@@ -54,7 +54,7 @@ public class ConnectionHandler {
         ConnectionHandler.serverDatasHandler = serverDatasHandler;
     }
 
-    public static LoginClientRes Login(Configuration config) {
+    public static LoginClientResponse Login(Configuration config) {
         // LoginResult loginResult = new LoginResult();
 
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
@@ -80,7 +80,7 @@ public class ConnectionHandler {
                         null, stream, "application/json", 20000);
                 logger.debug("loginPage=" + loginResponse);
                 Gson gson = new Gson();
-                loginClientRes = gson.fromJson(loginResponse, LoginClientRes.class);
+                loginClientRes = gson.fromJson(loginResponse, LoginClientResponse.class);
                 logger.debug("LoginClientRes assigned");
             } catch (IOException e) {
                 // loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
@@ -95,7 +95,7 @@ public class ConnectionHandler {
         return loginClientRes;
     }
 
-    public static ListDevicesResponse pollDevices(LoginClientRes loginClientRes) {
+    public static ListDevicesResponse pollDevices(LoginClientResponse loginClientRes) {
         try {
             String response = null;
 

@@ -32,8 +32,8 @@ import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
-import org.openhab.binding.melcloud.json.DeviceInfo;
-import org.openhab.binding.melcloud.json.LoginClientRes;
+import org.openhab.binding.melcloud.json.DeviceStatusResponse;
+import org.openhab.binding.melcloud.json.LoginClientResponse;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -51,10 +51,10 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private final Logger logger = LoggerFactory.getLogger(MelCloudBridgeHandler.class);
 
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
-    private @Nullable LoginClientRes loginClientRes;
+    private @Nullable LoginClientResponse loginClientRes;
     private ServerDatasHandler serverDatasHandler;
     private @Nullable ScheduledFuture<?> refreshJob;
-    private static @Nullable List<DeviceInfo> deviceList;
+    private static @Nullable List<DeviceStatusResponse> deviceList;
 
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
@@ -130,14 +130,14 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         return getThing().getUID();
     }
 
-    public @Nullable List<DeviceInfo> getdeviceList() {
+    public @Nullable List<DeviceStatusResponse> getdeviceList() {
 
         logger.debug("got Device List...");
         return deviceList;
     }
 
-    public @Nullable DeviceInfo getdeviceById(int id) {
-        for (DeviceInfo device : deviceList) {
+    public @Nullable DeviceStatusResponse getdeviceById(int id) {
+        for (DeviceStatusResponse device : deviceList) {
             if (device.getDeviceID().equals(id)) {
                 return device;
             }
@@ -185,7 +185,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                     logger.debug("Illegal status transition to ONLINE of thing");
                 }
 
-                DeviceInfo device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
+                DeviceStatusResponse device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
                 if (device != null) {
                     for (Channel channel : handler.getChannels()) {
                         handler.updateChannel(channel.getUID().getId(), device);

@@ -23,7 +23,7 @@ import com.google.gson.Gson;
  *
  * @author Luca Calcaterra - Initial contribution
  */
-public class ServerDatasHandler extends ListDevicesResponse implements Cloneable {
+public class ServerDatasHandler extends ListDevicesResponse /* implements Cloneable */ {
 
     private final static Logger logger = LoggerFactory.getLogger(ServerDatasHandler.class);
 
@@ -32,10 +32,10 @@ public class ServerDatasHandler extends ListDevicesResponse implements Cloneable
         Gson gson = new Gson();
         return gson.fromJson(json, ServerDatasHandler.class);
     }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
+    /*
+     * @Override
+     * public Object clone() throws CloneNotSupportedException {
+     * return super.clone();
+     * }
+     */
 }

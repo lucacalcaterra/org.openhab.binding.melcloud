@@ -18,12 +18,12 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@link LoginClientRes} is responsible of JSON data For MelCloud API
+ * The {@link LoginClientResponse} is responsible of JSON data For MelCloud API
  * sent to one of the channels.
  *
  * @author LucaCalcaterra - Initial contribution
  */
-public class LoginClientRes {
+public class LoginClientResponse {
 
     @SerializedName("ErrorId")
     @Expose

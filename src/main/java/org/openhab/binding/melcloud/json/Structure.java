@@ -33,7 +33,7 @@ public class Structure {
     private List<Object> areas = null;
     @SerializedName("Devices")
     @Expose
-    private List<DeviceInfo> devices = null;
+    private List<DeviceStatusResponse> devices = null;
     @SerializedName("Clients")
     @Expose
     private List<Object> clients = null;
@@ -54,11 +54,11 @@ public class Structure {
         this.areas = areas;
     }
 
-    public List<DeviceInfo> getDevices() {
+    public List<DeviceStatusResponse> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<DeviceInfo> devices) {
+    public void setDevices(List<DeviceStatusResponse> devices) {
         this.devices = devices;
     }
 
