@@ -23,7 +23,7 @@ import com.google.gson.Gson;
  *
  * @author Luca Calcaterra - Initial contribution
  */
-public class ServerDatasHandler extends ServerDatasObject implements Cloneable {
+public class ServerDatasHandler extends ListDevicesResponse implements Cloneable {
 
     private final static Logger logger = LoggerFactory.getLogger(ServerDatasHandler.class);
 

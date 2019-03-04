@@ -23,7 +23,7 @@ import org.eclipse.smarthome.io.net.http.HttpUtil;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
 import org.openhab.binding.melcloud.json.LoginClientRes;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
-import org.openhab.binding.melcloud.json.ServerDatasObject;
+import org.openhab.binding.melcloud.json.ListDevicesResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +95,7 @@ public class ConnectionHandler {
         return loginClientRes;
     }
 
-    public static ServerDatasObject pollDevices(LoginClientRes loginClientRes) {
+    public static ListDevicesResponse pollDevices(LoginClientRes loginClientRes) {
         try {
             String response = null;
 

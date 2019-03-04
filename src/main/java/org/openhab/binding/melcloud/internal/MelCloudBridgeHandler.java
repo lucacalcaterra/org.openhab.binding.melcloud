@@ -29,9 +29,10 @@ import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
+import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
-import org.openhab.binding.melcloud.json.Device;
+import org.openhab.binding.melcloud.json.DeviceInfo;
 import org.openhab.binding.melcloud.json.LoginClientRes;
 import org.openhab.binding.melcloud.json.ServerDatasHandler;
 import org.osgi.framework.ServiceRegistration;
@@ -53,7 +54,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private @Nullable LoginClientRes loginClientRes;
     private ServerDatasHandler serverDatasHandler;
     private @Nullable ScheduledFuture<?> refreshJob;
-    private static @Nullable List<Device> deviceList;
+    private static @Nullable List<DeviceInfo> deviceList;
 
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
@@ -84,7 +85,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                     "Connection error: Check Config or network");
         }
-        startAutomaticRefresh();
+        // startAutomaticRefresh();
     }
 
     @Override
@@ -129,14 +130,14 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         return getThing().getUID();
     }
 
-    public @Nullable List<Device> getdeviceList() {
+    public @Nullable List<DeviceInfo> getdeviceList() {
 
         logger.debug("got Device List...");
         return deviceList;
     }
 
-    public @Nullable Device getdeviceById(int id) {
-        for (Device device : deviceList) {
+    public @Nullable DeviceInfo getdeviceById(int id) {
+        for (DeviceInfo device : deviceList) {
             if (device.getDeviceID().equals(id)) {
                 return device;
             }
@@ -162,6 +163,14 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         }
     }
 
+    @Override
+    public void childHandlerInitialized(ThingHandler childHandler, Thing childThing) {
+        // TODO Auto-generated method stub
+        super.childHandlerInitialized(childHandler, childThing);
+        // updateThings();
+        startAutomaticRefresh();
+    }
+
     private void updateThings() {
 
         deviceList = ConnectionHandler.pollDevices(loginClientRes).getStructure().getDevices();
@@ -176,7 +185,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                     logger.debug("Illegal status transition to ONLINE of thing");
                 }
 
-                Device device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
+                DeviceInfo device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
                 if (device != null) {
                     for (Channel channel : handler.getChannels()) {
                         handler.updateChannel(channel.getUID().getId(), device);

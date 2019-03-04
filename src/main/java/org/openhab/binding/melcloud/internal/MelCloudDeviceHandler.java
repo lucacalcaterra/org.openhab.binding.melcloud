@@ -28,7 +28,7 @@ import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.ThingStatusInfo;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
-import org.openhab.binding.melcloud.json.Device;
+import org.openhab.binding.melcloud.json.DeviceInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,10 +149,10 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
         return getThing().getChannels();
     }
 
-    public synchronized void updateChannel(String channelId, Device device) {
+    public synchronized void updateChannel(String channelId, DeviceInfo device) {
         switch (channelId) {
             case CHANNEL_POWER:
-                updateState(CHANNEL_POWER, OnOffType.ON);
+                updateState(CHANNEL_POWER, device.getDeviceProps().getPower() ? OnOffType.ON : OnOffType.OFF);
                 break;
             case CHANNEL_ROOM_TEMPERATURE:
                 updateState(CHANNEL_ROOM_TEMPERATURE, new DecimalType(device.getDeviceProps().getRoomTemperature()));

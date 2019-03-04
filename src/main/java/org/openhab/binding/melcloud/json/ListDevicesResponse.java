@@ -16,12 +16,12 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@link ServerDatasObject} is responsible of JSON data For MelCloud API
+ * The {@link ListDevicesResponse} is responsible of JSON data For MelCloud API
  * sent to one of the channels.
  *
  * @author LucaCalcaterra - Initial contribution
  */
-public class ServerDatasObject {
+public class ListDevicesResponse {
 
     @SerializedName("ID")
     @Expose

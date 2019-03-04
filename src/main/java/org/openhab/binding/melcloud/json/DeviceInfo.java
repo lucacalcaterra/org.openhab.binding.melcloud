@@ -19,13 +19,13 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@link Device} is responsible of JSON data For MelCloud API
+ * The {@link DeviceInfo} is responsible of JSON data For MelCloud API
  * sent to one of the channels.
  *
  * @author LucaCalcaterra - Initial contribution
  */
 
-public class Device {
+public class DeviceInfo {
 
     @SerializedName("DeviceID")
     @Expose
