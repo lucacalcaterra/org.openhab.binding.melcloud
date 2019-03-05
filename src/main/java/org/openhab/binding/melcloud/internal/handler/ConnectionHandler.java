@@ -21,9 +21,8 @@ import java.util.Properties;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
-import org.openhab.binding.melcloud.json.LoginClientResponse;
-import org.openhab.binding.melcloud.json.ServerDatasHandler;
 import org.openhab.binding.melcloud.json.ListDevicesResponse;
+import org.openhab.binding.melcloud.json.LoginClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,27 +34,20 @@ import com.google.gson.JsonObject;
  *
  * @author Luca Calcaterra - Initial Contribution
  */
-public class ConnectionHandler {
-    private final static Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
+public final class ConnectionHandler {
+
+    private final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
+
+    private final Configuration config;
+    private Boolean isConnected = false;
     private static LoginClientResponse loginClientRes;
-    private static ServerDatasHandler serverDatasHandler;
+    private static ListDevicesResponse listDevicesResponse;
 
-    /**
-     * @return the serverDatasHandler
-     */
-    public static ServerDatasHandler getServerDatasHandler() {
-        return serverDatasHandler;
+    public ConnectionHandler(Configuration config) {
+        this.config = config;
     }
 
-    /**
-     * @param serverDatasHandler the serverDatasHandler to set
-     */
-    public static void setServerDatasHandler(ServerDatasHandler serverDatasHandler) {
-        ConnectionHandler.serverDatasHandler = serverDatasHandler;
-    }
-
-    public static LoginClientResponse Login(Configuration config) {
-        // LoginResult loginResult = new LoginResult();
+    public LoginClientResponse Login() {
 
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
                 || config.get(MelCloudBindingConstants.LOGIN_PASS) == null) {
@@ -81,8 +73,10 @@ public class ConnectionHandler {
                 logger.debug("loginPage=" + loginResponse);
                 Gson gson = new Gson();
                 loginClientRes = gson.fromJson(loginResponse, LoginClientResponse.class);
+                this.isConnected = true;
                 logger.debug("LoginClientRes assigned");
             } catch (IOException e) {
+                logger.error("Connection error to: " + config.get(MelCloudBindingConstants.LOGIN_URL));
                 // loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
                 // loginResult.errorDetail = e.getMessage();
                 // loginResult.statusDescr = "@text/offline.uri-error-1";
@@ -95,28 +89,30 @@ public class ConnectionHandler {
         return loginClientRes;
     }
 
-    public static ListDevicesResponse pollDevices(LoginClientResponse loginClientRes) {
-        try {
-            String response = null;
+    public ListDevicesResponse pollDevices(LoginClientResponse loginClientRes) {
+        if (isConnected) {
+            try {
+                String response = null;
 
-            Properties headers = new Properties();
-            headers.put("X-MitsContextKey", loginClientRes.getLoginData().getContextKey());
+                Properties headers = new Properties();
+                headers.put("X-MitsContextKey", loginClientRes.getLoginData().getContextKey());
 
-            response = HttpUtil.executeUrl("GET", "https://app.melcloud.com/Mitsubishi.Wifi.Client/User/ListDevices",
-                    headers, null, null, 20000);
-            logger.debug("get response for list devices");
-            // return serverDatasHandler;
-            Gson gson = new Gson();
-            // ServerDatasHandler[] s = gson.fromJson(response, ServerDatasHandler[].class);
-            serverDatasHandler = gson.fromJson(response, ServerDatasHandler[].class)[0];
+                response = HttpUtil.executeUrl("GET",
+                        "https://app.melcloud.com/Mitsubishi.Wifi.Client/User/ListDevices", headers, null, null, 20000);
+                logger.debug("get response for list devices");
+                // return serverDatasHandler;
+                Gson gson = new Gson();
+                // ServerDatasHandler[] s = gson.fromJson(response, ServerDatasHandler[].class);
+                listDevicesResponse = gson.fromJson(response, ListDevicesResponse[].class)[0];
 
-            logger.debug("get response for list devices in json class");
+                logger.debug("get response for list devices in json class");
 
-        } catch (IOException e) {
-            logger.debug("IO exception on PollDevices: " + e);
-        } catch (IllegalArgumentException e) {
-            logger.debug("IllArguments exception on PollDevices: " + e);
+            } catch (IOException e) {
+                logger.debug("IO exception on PollDevices: " + e);
+            } catch (IllegalArgumentException e) {
+                logger.debug("IllArguments exception on PollDevices: " + e);
+            }
         }
-        return serverDatasHandler;
+        return listDevicesResponse;
     }
 }
