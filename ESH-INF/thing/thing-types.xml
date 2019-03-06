@@ -15,6 +15,8 @@
 		<channels>
 			<channel id="power" typeId="power-channel" />
 			<channel id="roomTemperature" typeId="roomTemperature-channel" />
+			<channel id="lastCommunication" typeId="lastCommunication-channel" />
+			<channel id="nextCommunication" typeId="nextCommunication-channel" />
 		</channels>
 
 		<!-- config for device... For now i don't need it -->
@@ -34,6 +36,18 @@
 		<label>Room Temperature</label>
 		<description>Room Temperature</description>
 		<state readOnly="true" pattern="%.1f %unit%" />
+	</channel-type>
+	<channel-type id="lastCommunication-channel">
+		<item-type>String</item-type>
+		<label>Last Communication</label>
+		<description>Last Communication</description>
+		<state readOnly="true" />
+	</channel-type>
+	<channel-type id="nextCommunication-channel">
+		<item-type>String</item-type>
+		<label>Next Communication</label>
+		<description>Next Communication</description>
+		<state readOnly="true" />
 	</channel-type>
 
 </thing:thing-descriptions>
