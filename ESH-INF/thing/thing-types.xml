@@ -38,13 +38,13 @@
 		<state readOnly="true" pattern="%.1f %unit%" />
 	</channel-type>
 	<channel-type id="lastCommunication-channel">
-		<item-type>String</item-type>
+		<item-type>DateTime</item-type>
 		<label>Last Communication</label>
 		<description>Last Communication</description>
 		<state readOnly="true" />
 	</channel-type>
 	<channel-type id="nextCommunication-channel">
-		<item-type>String</item-type>
+		<item-type>DateTime</item-type>
 		<label>Next Communication</label>
 		<description>Next Communication</description>
 		<state readOnly="true" />

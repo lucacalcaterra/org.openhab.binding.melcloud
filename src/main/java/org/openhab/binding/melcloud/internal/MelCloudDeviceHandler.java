@@ -18,9 +18,9 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.OnOffType;
-import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
@@ -159,10 +159,10 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 updateState(CHANNEL_ROOM_TEMPERATURE, new DecimalType(deviceStatus.getRoomTemperature()));
                 break;
             case CHANNEL_LAST_COMMUNICATION:
-                updateState(CHANNEL_LAST_COMMUNICATION, new StringType(deviceStatus.getLastCommunication()));
+                updateState(CHANNEL_LAST_COMMUNICATION, new DateTimeType(deviceStatus.getLastCommunication()));
                 break;
             case CHANNEL_NEXT_COMMUNICATION:
-                updateState(CHANNEL_NEXT_COMMUNICATION, new StringType(deviceStatus.getNextCommunication()));
+                updateState(CHANNEL_NEXT_COMMUNICATION, new DateTimeType(deviceStatus.getNextCommunication()));
                 break;
         }
     }
