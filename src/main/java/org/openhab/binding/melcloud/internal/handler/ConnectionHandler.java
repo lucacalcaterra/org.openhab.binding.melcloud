@@ -21,6 +21,7 @@ import java.util.Properties;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
+import org.openhab.binding.melcloud.json.DeviceStatus;
 import org.openhab.binding.melcloud.json.ListDevicesResponse;
 import org.openhab.binding.melcloud.json.LoginClientResponse;
 import org.slf4j.Logger;
@@ -39,15 +40,20 @@ public final class ConnectionHandler {
     private final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
 
     private final Configuration config;
-    private Boolean isConnected = false;
+    private boolean isConnected = false;
     private static LoginClientResponse loginClientRes;
+
+    public static LoginClientResponse getLoginClientRes() {
+        return loginClientRes;
+    }
+
     private static ListDevicesResponse listDevicesResponse;
 
     public ConnectionHandler(Configuration config) {
         this.config = config;
     }
 
-    public LoginClientResponse Login() {
+    public boolean Login() {
 
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
                 || config.get(MelCloudBindingConstants.LOGIN_PASS) == null) {
@@ -86,10 +92,10 @@ public final class ConnectionHandler {
                 // loginResult.statusDescr = "@text/offline.uri-error-2";
             }
         }
-        return loginClientRes;
+        return isConnected;
     }
 
-    public ListDevicesResponse pollDevices(LoginClientResponse loginClientRes) {
+    public ListDevicesResponse pollDevices() {
         if (isConnected) {
             try {
                 String response = null;
@@ -106,6 +112,7 @@ public final class ConnectionHandler {
                 listDevicesResponse = gson.fromJson(response, ListDevicesResponse[].class)[0];
 
                 logger.debug("get response for list devices in json class");
+                return listDevicesResponse;
 
             } catch (IOException e) {
                 logger.debug("IO exception on PollDevices: " + e);
@@ -113,6 +120,33 @@ public final class ConnectionHandler {
                 logger.debug("IllArguments exception on PollDevices: " + e);
             }
         }
-        return listDevicesResponse;
+        return null;
+    }
+
+    public DeviceStatus pollDeviceStatus(Integer id) {
+
+        if (isConnected) {
+            try {
+                String response = null;
+                Properties headers = new Properties();
+                headers.put("X-MitsContextKey", loginClientRes.getLoginData().getContextKey());
+                String url = "https://app.melcloud.com/Mitsubishi.Wifi.Client/Device/Get?" + "id=" + id.toString()
+                        + "&buildingID=" + listDevicesResponse.getID();
+
+                response = HttpUtil.executeUrl("GET", url, headers, null, null, 2000);
+                Gson gson = new Gson();
+                DeviceStatus deviceStatus = gson.fromJson(response, DeviceStatus.class);
+                logger.debug("returned device status");
+                return deviceStatus;
+
+            } catch (IOException e) {
+                logger.debug("IO exception on polling specific device status: " + e);
+            } catch (IllegalArgumentException e) {
+                logger.debug("IllArguments exception on polling specific device status: " + e);
+            }
+
+        }
+        return null;
+
     }
 }

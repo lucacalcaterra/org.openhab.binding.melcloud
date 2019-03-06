@@ -33,6 +33,7 @@ import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
 import org.openhab.binding.melcloud.json.Device;
+import org.openhab.binding.melcloud.json.DeviceStatus;
 import org.openhab.binding.melcloud.json.ListDevicesResponse;
 import org.openhab.binding.melcloud.json.LoginClientResponse;
 import org.osgi.framework.ServiceRegistration;
@@ -71,7 +72,8 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         updateStatus(ThingStatus.UNKNOWN);
 
         connectionHandler = new ConnectionHandler(config);
-        loginClientRes = connectionHandler.Login();
+        connectionHandler.Login();
+        loginClientRes = ConnectionHandler.getLoginClientRes();
 
         // Updates the thing status accordingly
         if (loginClientRes.getErrorId() == null) {
@@ -162,7 +164,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                 }
             };
 
-            int delay = 10;
+            int delay = 30;
             refreshJob = scheduler.scheduleWithFixedDelay(runnable, 6, delay, TimeUnit.SECONDS);
         }
     }
@@ -177,7 +179,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     private void updateThings() {
 
-        deviceList = connectionHandler.pollDevices(loginClientRes).getStructure().getDevices();
+        deviceList = connectionHandler.pollDevices().getStructure().getDevices();
 
         for (Thing thing : getThing().getThings()) {
             MelCloudDeviceHandler handler = (MelCloudDeviceHandler) thing.getHandler();
@@ -189,10 +191,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                     logger.debug("Illegal status transition to ONLINE of thing");
                 }
 
-                Device device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
-                if (device != null) {
+                // Device device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
+                DeviceStatus deviceStatus = connectionHandler
+                        .pollDeviceStatus(Integer.parseInt(thing.getProperties().get("deviceID")));
+                if (deviceStatus != null) {
                     for (Channel channel : handler.getChannels()) {
-                        handler.updateChannel(channel.getUID().getId(), device);
+                        handler.updateChannel(channel.getUID().getId(), deviceStatus);
                         /*
                          * switch (channel.getUID().getId()) {
                          * case CHANNEL_POWER:
