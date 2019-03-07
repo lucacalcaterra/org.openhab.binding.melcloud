@@ -145,8 +145,15 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
     public synchronized void updateChannel(String channelId, DeviceStatus deviceStatus) {
         switch (channelId) {
+            case CHANNEL_OFFLINE:
+                updateState(CHANNEL_OFFLINE, deviceStatus.getOffline() ? OnOffType.ON : OnOffType.OFF);
+                break;
             case CHANNEL_POWER:
                 updateState(CHANNEL_POWER, deviceStatus.getPower() ? OnOffType.ON : OnOffType.OFF);
+                break;
+            case CHANNEL_HAS_PENDING_COMMAND:
+                updateState(CHANNEL_HAS_PENDING_COMMAND,
+                        deviceStatus.getHasPendingCommand() ? OnOffType.ON : OnOffType.OFF);
                 break;
             case CHANNEL_ROOM_TEMPERATURE:
                 updateState(CHANNEL_ROOM_TEMPERATURE, new DecimalType(deviceStatus.getRoomTemperature()));
@@ -158,8 +165,8 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
             case CHANNEL_NEXT_COMMUNICATION:
                 updateState(CHANNEL_NEXT_COMMUNICATION,
                         new DateTimeType(deviceStatus.getNextCommunication().split("[.]")[0]));
-
                 break;
+
         }
     }
 

@@ -13,10 +13,14 @@
 		<description>Air Conditioning Device </description>
 
 		<channels>
-			<channel id="power" typeId="power-channel" />
+		    <channel id="power" typeId="power-channel" />
 			<channel id="roomTemperature" typeId="roomTemperature-channel" />
 			<channel id="lastCommunication" typeId="lastCommunication-channel" />
 			<channel id="nextCommunication" typeId="nextCommunication-channel" />
+			<channel id="offline" typeId="offline-channel" />
+            <channel id="hasPendingCommand" typeId="hasPendingCommand-channel" />
+
+
 		</channels>
 
 		<!-- config for device... For now i don't need it -->
@@ -25,7 +29,6 @@
 
 	</thing-type>
 
-	<!-- Power Channel Type -->
 	<channel-type id="power-channel">
 		<item-type>Switch</item-type>
 		<label>Power</label>
@@ -47,6 +50,18 @@
 		<item-type>DateTime</item-type>
 		<label>Next Communication</label>
 		<description>Next Communication</description>
+		<state readOnly="true" />
+	</channel-type>
+	<channel-type id="offline-channel">
+		<item-type>Switch</item-type>
+		<label>is Offline </label>
+		<description>Check if the Device is Offline</description>
+		<state readOnly="true" />
+	</channel-type>
+	<channel-type id="hasPendingCommand-channel">
+		<item-type>Switch</item-type>
+		<label>PendingCommand</label>
+		<description>Check if the Device has a pending command</description>
 		<state readOnly="true" />
 	</channel-type>
 
