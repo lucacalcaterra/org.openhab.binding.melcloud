@@ -14,6 +14,7 @@ package org.openhab.binding.melcloud.internal;
 
 import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -26,7 +27,6 @@ import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
-import org.eclipse.smarthome.core.thing.ThingStatusInfo;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.json.DeviceStatus;
@@ -42,18 +42,11 @@ import org.slf4j.LoggerFactory;
 @NonNullByDefault
 public class MelCloudDeviceHandler extends BaseThingHandler {
 
-    @Override
-    public void bridgeStatusChanged(ThingStatusInfo bridgeStatusInfo) {
-        // TODO Auto-generated method stub
-        super.bridgeStatusChanged(bridgeStatusInfo);
-    }
-
     private final Logger logger = LoggerFactory.getLogger(MelCloudDeviceHandler.class);
-
     @Nullable
     private MelCloudConfiguration config;
-
     private @Nullable MelCloudBridgeHandler bridge;
+    DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
 
     public MelCloudDeviceHandler(Thing thing) {
         super(thing);
@@ -159,10 +152,13 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 updateState(CHANNEL_ROOM_TEMPERATURE, new DecimalType(deviceStatus.getRoomTemperature()));
                 break;
             case CHANNEL_LAST_COMMUNICATION:
-                updateState(CHANNEL_LAST_COMMUNICATION, new DateTimeType(deviceStatus.getLastCommunication()));
+                updateState(CHANNEL_LAST_COMMUNICATION,
+                        new DateTimeType(deviceStatus.getLastCommunication().split("[.]")[0]));
                 break;
             case CHANNEL_NEXT_COMMUNICATION:
-                updateState(CHANNEL_NEXT_COMMUNICATION, new DateTimeType(deviceStatus.getNextCommunication()));
+                updateState(CHANNEL_NEXT_COMMUNICATION,
+                        new DateTimeType(deviceStatus.getNextCommunication().split("[.]")[0]));
+
                 break;
         }
     }

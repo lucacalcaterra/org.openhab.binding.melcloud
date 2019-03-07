@@ -15,6 +15,7 @@ package org.openhab.binding.melcloud.internal.discovery;
 import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
@@ -24,6 +25,7 @@ import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.openhab.binding.melcloud.internal.MelCloudBridgeHandler;
+import org.openhab.binding.melcloud.json.Device;
 import org.osgi.service.component.annotations.Modified;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,30 +80,40 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
      * }
      * }
      */
-    private void createResults() {
+    private synchronized void createResults() {
         logger.debug("createResults()");
         ThingUID bridgeUID = bridgeHandler.getThing().getUID();
         if (bridgeHandler.getThing().getThingTypeUID().equals(LOGIN_BRIDGE_THING_TYPE)) {
             logger.debug("bridge type");
             // get device list
-            bridgeHandler.getdeviceList().forEach(device -> {
-                ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, bridgeHandler.getThing().getUID(),
-                        "Device-" + device.getDeviceID());
-                Map<String, Object> deviceProperties = new HashMap<>();
-                deviceProperties.put("deviceID", device.getDeviceID().toString());
-                deviceProperties.put("serialNumber", device.getSerialNumber().toString());
-                deviceProperties.put("macAddress", device.getMacAddress().toString());
-                deviceProperties.put("deviceName", device.getDeviceName().toString());
+            List<Device> deviceList = bridgeHandler.getdeviceList();
 
-                thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(device.getDeviceName())
-                        .withProperties(deviceProperties).withRepresentationProperty(device.getDeviceID().toString())
-                        .withBridge(bridgeUID).build());
-
-                logger.debug("return Things belongs to MelCloud Bridge");
+            if (deviceList == null) {
+                logger.debug("device list array null");
             }
 
-            );
-            logger.debug("finish list of devices");
+            else {
+                deviceList.forEach(device -> {
+
+                    ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, bridgeHandler.getThing().getUID(),
+                            "Device-" + device.getDeviceID());
+                    logger.debug("new thing ACDEVICE inside foreach deviceList");
+                    Map<String, Object> deviceProperties = new HashMap<>();
+                    deviceProperties.put("deviceID", device.getDeviceID().toString());
+                    deviceProperties.put("serialNumber", device.getSerialNumber().toString());
+                    deviceProperties.put("macAddress", device.getMacAddress().toString());
+                    deviceProperties.put("deviceName", device.getDeviceName().toString());
+
+                    thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(device.getDeviceName())
+                            .withProperties(deviceProperties)
+                            .withRepresentationProperty(device.getDeviceID().toString()).withBridge(bridgeUID).build());
+
+                    logger.debug("return Things belongs to MelCloud Bridge");
+                }
+
+                );
+                logger.debug("finish list of devices");
+            }
         }
 
     }

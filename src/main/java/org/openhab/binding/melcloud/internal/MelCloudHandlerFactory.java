@@ -72,7 +72,7 @@ public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
         return null;
     }
 
-    private synchronized void registerDiscoveryService(MelCloudBridgeHandler bridgeHandler) {
+    private void registerDiscoveryService(MelCloudBridgeHandler bridgeHandler) {
         // (TODO) Auto-generated method stub
         MelCloudDiscoveryService discoveryService = new MelCloudDiscoveryService(bridgeHandler);
         bridgeHandler.getDiscoveryServiceRegs().put(bridgeHandler.getThing().getUID(), bundleContext

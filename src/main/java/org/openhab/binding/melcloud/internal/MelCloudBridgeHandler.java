@@ -52,11 +52,17 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private final Logger logger = LoggerFactory.getLogger(MelCloudBridgeHandler.class);
 
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
-    private @Nullable LoginClientResponse loginClientRes;
+    // private @Nullable LoginClientResponse loginClientRes;
     private ListDevicesResponse listDevices;
     private @Nullable ScheduledFuture<?> refreshJob;
 
     private @Nullable ConnectionHandler connectionHandler;
+    private @Nullable LoginClientResponse loginClientRes;
+
+    public @Nullable ConnectionHandler getConnectionHandler() {
+        return connectionHandler;
+    }
+
     private static @Nullable List<Device> deviceList;
 
     public MelCloudBridgeHandler(Bridge bridge) {
@@ -71,13 +77,13 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         Configuration config = getThing().getConfiguration();
         updateStatus(ThingStatus.UNKNOWN);
 
-        connectionHandler = new ConnectionHandler(config);
-        connectionHandler.Login();
-        loginClientRes = ConnectionHandler.getLoginClientRes();
+        this.connectionHandler = new ConnectionHandler(config);
+        loginClientRes = connectionHandler.Login();
 
         // Updates the thing status accordingly
-        if (loginClientRes.getErrorId() == null) {
+        if ((loginClientRes != null) && (loginClientRes.getErrorId() == null)) {
             try {
+                deviceList = connectionHandler.pollDevices().getStructure().getDevices();
                 updateStatus(ThingStatus.ONLINE);
             } catch (Exception e) {
                 logger.debug("Illegal status transition to ONLINE");
@@ -91,7 +97,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                     "Connection error: Check Config or network");
         }
-        // startAutomaticRefresh();
+        startAutomaticRefresh();
     }
 
     @Override
@@ -143,9 +149,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     }
 
     public @Nullable Device getdeviceById(int id) {
-        for (Device device : deviceList) {
-            if (device.getDeviceID().equals(id)) {
-                return device;
+
+        if (deviceList != null) {
+            for (Device device : deviceList) {
+                if (device.getDeviceID().equals(id)) {
+                    return device;
+                }
             }
         }
         return null;
@@ -165,7 +174,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             };
 
             int delay = 30;
-            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 3, delay, TimeUnit.SECONDS);
+            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 6, delay, TimeUnit.SECONDS);
         }
     }
 
@@ -174,12 +183,9 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         // TODO Auto-generated method stub
         super.childHandlerInitialized(childHandler, childThing);
         // updateThings();
-        startAutomaticRefresh();
     }
 
-    private void updateThings() {
-
-        deviceList = connectionHandler.pollDevices().getStructure().getDevices();
+    private synchronized void updateThings() {
 
         for (Thing thing : getThing().getThings()) {
             MelCloudDeviceHandler handler = (MelCloudDeviceHandler) thing.getHandler();

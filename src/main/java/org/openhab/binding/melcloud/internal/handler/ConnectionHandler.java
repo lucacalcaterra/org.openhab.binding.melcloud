@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
@@ -35,7 +36,7 @@ import com.google.gson.JsonObject;
  *
  * @author Luca Calcaterra - Initial Contribution
  */
-public final class ConnectionHandler {
+public class ConnectionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
 
@@ -53,7 +54,8 @@ public final class ConnectionHandler {
         this.config = config;
     }
 
-    public boolean Login() {
+    @Nullable
+    public LoginClientResponse Login() {
 
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
                 || config.get(MelCloudBindingConstants.LOGIN_PASS) == null) {
@@ -81,6 +83,7 @@ public final class ConnectionHandler {
                 loginClientRes = gson.fromJson(loginResponse, LoginClientResponse.class);
                 this.isConnected = true;
                 logger.debug("LoginClientRes assigned");
+                return loginClientRes;
             } catch (IOException e) {
                 logger.error("Connection error to: " + config.get(MelCloudBindingConstants.LOGIN_URL));
                 // loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
@@ -92,7 +95,7 @@ public final class ConnectionHandler {
                 // loginResult.statusDescr = "@text/offline.uri-error-2";
             }
         }
-        return isConnected;
+        return null;
     }
 
     public ListDevicesResponse pollDevices() {
