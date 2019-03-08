@@ -17,6 +17,8 @@ import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.measure.quantity.Temperature;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
@@ -70,7 +72,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 cmdtoSend.setOperationMode(((DecimalType) command).intValue());
             }
             if (CHANNEL_SET_TEMPERATURE.equals(channelUID.getId())) {
-                cmdtoSend.setSetTemperature(((QuantityType<?>) command).doubleValue());
+                cmdtoSend.setSetTemperature(((QuantityType<Temperature>) command).doubleValue());
             }
             if (CHANNEL_SET_FAN_SPEED.equals(channelUID.getId())) {
                 cmdtoSend.setSetFanSpeed(((DecimalType) command).intValue());
