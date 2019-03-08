@@ -13,12 +13,18 @@
 		<description>Air Conditioning Device </description>
 
 		<channels>
-		    <channel id="power" typeId="power-channel" />
+			<channel id="power" typeId="power-channel" />
+			<channel id="operationMode" typeId="operationMode-channel" />
+			<channel id="setTemperature" typeId="setTemperature-channel" />
+			<channel id="setFanSpeed" typeId="setFanSpeed-channel" />
+			<channel id="vaneHorizontal" typeId="vaneHorizontal-channel" />
+			<channel id="vaneVertical" typeId="vaneVertical-channel" />
+			<!-- Read Only Channels -->
 			<channel id="roomTemperature" typeId="roomTemperature-channel" />
 			<channel id="lastCommunication" typeId="lastCommunication-channel" />
 			<channel id="nextCommunication" typeId="nextCommunication-channel" />
 			<channel id="offline" typeId="offline-channel" />
-            <channel id="hasPendingCommand" typeId="hasPendingCommand-channel" />
+			<channel id="hasPendingCommand" typeId="hasPendingCommand-channel" />
 
 
 		</channels>
@@ -28,11 +34,78 @@
 			is a sample text configuration parameter.</description> </parameter> </config-description> -->
 
 	</thing-type>
-
+	<!-- Updatable channels -->
 	<channel-type id="power-channel">
 		<item-type>Switch</item-type>
 		<label>Power</label>
 		<description>ON/OFF Power Status of Device</description>
+	</channel-type>
+	<channel-type id="operationMode-channel">
+		<item-type>Number</item-type>
+		<label>Operation Mode</label>
+		<description>Operation mode</description>
+		<state readOnly="false">
+			<options>
+				<option value="1">Heat</option>
+				<option value="2">Dry</option>
+				<option value="3">Cool</option>
+				<option value="7">Fan</option>
+				<option value="8">Auto</option>
+			</options>
+		</state>
+	</channel-type>
+	<channel-type id="setTemperature-channel">
+		<item-type>Number:Temperature</item-type>
+		<label>Set Temperature</label>
+		<description>Set Temperature</description>
+		<state readOnly="false" pattern="%.1f %unit%" />
+	</channel-type>
+	<channel-type id="setFanSpeed-channel">
+		<item-type>Number</item-type>
+		<label>Fan Speed</label>
+		<description>Fan Speed</description>
+		<state readOnly="false">
+			<options>
+				<option value="0">Auto</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</options>
+		</state>
+	</channel-type>
+	<channel-type id="vaneHorizontal-channel">
+		<item-type>Number</item-type>
+		<label>Vane Horizontal</label>
+		<description>Vane Horizontal</description>
+		<state readOnly="false">
+			<options>
+				<option value="0">Auto</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="12">Swing</option>
+			</options>
+		</state>
+	</channel-type>
+	<channel-type id="vaneVertical-channel">
+		<item-type>Number</item-type>
+		<label>Vane Horizontal</label>
+		<description>Vane Horizontal</description>
+		<state readOnly="false">
+			<options>
+				<option value="0">Auto</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="7">Swing</option>
+			</options>
+		</state>
 	</channel-type>
 	<channel-type id="roomTemperature-channel">
 		<item-type>Number:Temperature</item-type>
