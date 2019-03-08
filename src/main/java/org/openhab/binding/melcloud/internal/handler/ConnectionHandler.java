@@ -152,4 +152,38 @@ public class ConnectionHandler {
         return null;
 
     }
+
+    public boolean sendCommand(DeviceStatus deviceStatusToPost) {
+
+        if (isConnected) {
+
+            try {
+                deviceStatusToPost.setHasPendingCommand(true);
+
+                deviceStatusToPost.setEffectiveFlags(0x1F);
+
+                // Prepare params
+                Gson gson = new Gson();
+
+                // String contentfromgson = gson.toJson(cmd, DeviceStatus.class);
+                String content = gson.toJson(deviceStatusToPost, DeviceStatus.class);
+                InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+
+                Properties headers = new Properties();
+                headers.put("X-MitsContextKey", loginClientRes.getLoginData().getContextKey());
+                String response = HttpUtil.executeUrl("POST",
+                        "https://app.melcloud.com/Mitsubishi.Wifi.Client/Device/SetAta", headers, stream,
+                        "application/json", 2000);
+                logger.debug("command executed");
+
+            } catch (IOException e) {
+                logger.debug("IO exception on sending command : " + e);
+            } catch (IllegalArgumentException e) {
+                logger.debug("IllArguments exception on sending command: " + e);
+            }
+
+        }
+        return false;
+
+    }
 }

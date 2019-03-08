@@ -22,6 +22,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.OnOffType;
+import org.eclipse.smarthome.core.library.types.QuantityType;
+import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
@@ -29,6 +31,7 @@ import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
+import org.eclipse.smarthome.core.types.RefreshType;
 import org.openhab.binding.melcloud.json.DeviceStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +48,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     private final Logger logger = LoggerFactory.getLogger(MelCloudDeviceHandler.class);
     @Nullable
     private MelCloudConfiguration config;
-    private @Nullable MelCloudBridgeHandler bridge;
+    private @Nullable MelCloudBridgeHandler bridgeHandler;
     DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
 
     public MelCloudDeviceHandler(Thing thing) {
@@ -54,6 +57,35 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
+        logger.debug("Handled command {}", command);
+
+        if (command instanceof RefreshType) {
+            // only for refresh. unused for now... muste be optimized
+        } else {
+            DeviceStatus cmdtoSend = new DeviceStatus();
+            if (CHANNEL_POWER.equals(channelUID.getId())) {
+                cmdtoSend.setPower((OnOffType) command == OnOffType.ON ? true : false);
+            }
+            if (CHANNEL_OPERATION_MODE.equals(channelUID.getId())) {
+                cmdtoSend.setOperationMode(((DecimalType) command).intValue());
+            }
+            if (CHANNEL_SET_TEMPERATURE.equals(channelUID.getId())) {
+                cmdtoSend.setSetTemperature(((QuantityType<?>) command).doubleValue());
+            }
+            if (CHANNEL_SET_FAN_SPEED.equals(channelUID.getId())) {
+                cmdtoSend.setSetFanSpeed(((DecimalType) command).intValue());
+            }
+            if (CHANNEL_VANE_HORIZONTAL.equals(channelUID.getId())) {
+                cmdtoSend.setVaneHorizontal(((DecimalType) command).intValue());
+            }
+            if (CHANNEL_VANE_VERTICAL.equals(channelUID.getId())) {
+                cmdtoSend.setVaneVertical(((DecimalType) command).intValue());
+            }
+            logger.debug("devicestatus prepared for send command");
+            cmdtoSend.setDeviceID(Integer.parseInt(thing.getProperties().get("deviceID")));
+            // sending command
+            bridgeHandler.getConnectionHandler().sendCommand(cmdtoSend);
+        }
         /*
          * if (CHANNEL_POWER.equals(channelUID.getId())) {
          * if (command instanceof RefreshType) {
@@ -90,18 +122,17 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
         logger.debug("Initializing {} handler.", getThing().getThingTypeUID());
 
-        String errorMsg = null;
-
-        if (getBridge() == null) {
-            errorMsg = "Invalid bridge";
-        } else {
-            bridge = (MelCloudBridgeHandler) getBridge().getHandler();
+        // String errorMsg = null;
+        Bridge bridge = getBridge();
+        if (bridge == null) {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, "Bridge Not set");
+            return;
         }
 
-        if (errorMsg == null) {
-            updateStatus(ThingStatus.UNKNOWN);
-        } else {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, errorMsg);
+        bridgeHandler = (MelCloudBridgeHandler) getBridge().getHandler();
+        if (bridgeHandler == null) {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.BRIDGE_OFFLINE);
+            return;
         }
 
         // (TODO): Initialize the handler.
@@ -143,7 +174,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
         return getThing().getChannels();
     }
 
-    public synchronized void updateChannel(String channelId, DeviceStatus deviceStatus) {
+    public void updateChannel(String channelId, DeviceStatus deviceStatus) {
         switch (channelId) {
 
             case CHANNEL_POWER:

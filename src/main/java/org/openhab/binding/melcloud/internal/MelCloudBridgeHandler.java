@@ -174,7 +174,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             };
 
             int delay = 30;
-            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 6, delay, TimeUnit.SECONDS);
+            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 4, delay, TimeUnit.SECONDS);
         }
     }
 

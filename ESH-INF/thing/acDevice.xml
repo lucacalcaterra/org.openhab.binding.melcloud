@@ -13,6 +13,9 @@
 		<description>Air Conditioning Device </description>
 
 		<channels>
+
+			<channel id="hasPendingCommand" typeId="hasPendingCommand-channel" />
+			<channel id="offline" typeId="offline-channel" />
 			<channel id="power" typeId="power-channel" />
 			<channel id="operationMode" typeId="operationMode-channel" />
 			<channel id="setTemperature" typeId="setTemperature-channel" />
@@ -23,8 +26,6 @@
 			<channel id="roomTemperature" typeId="roomTemperature-channel" />
 			<channel id="lastCommunication" typeId="lastCommunication-channel" />
 			<channel id="nextCommunication" typeId="nextCommunication-channel" />
-			<channel id="offline" typeId="offline-channel" />
-			<channel id="hasPendingCommand" typeId="hasPendingCommand-channel" />
 
 
 		</channels>
@@ -55,10 +56,10 @@
 		</state>
 	</channel-type>
 	<channel-type id="setTemperature-channel">
-		<item-type>Number:Temperature</item-type>
+		<item-type>Number</item-type>
 		<label>Set Temperature</label>
 		<description>Set Temperature</description>
-		<state readOnly="false" pattern="%.1f %unit%" />
+		<state min="10" max="40" step="0.5" pattern="%d °C" readOnly="false" />
 	</channel-type>
 	<channel-type id="setFanSpeed-channel">
 		<item-type>Number</item-type>
