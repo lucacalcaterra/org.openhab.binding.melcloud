@@ -160,7 +160,7 @@ public class ConnectionHandler {
             try {
                 deviceStatusToPost.setHasPendingCommand(true);
 
-                deviceStatusToPost.setEffectiveFlags(0x1F);
+                // deviceStatusToPost.setEffectiveFlags(0x1F);
 
                 // Prepare params
                 Gson gson = new Gson();
@@ -174,7 +174,7 @@ public class ConnectionHandler {
                 String response = HttpUtil.executeUrl("POST",
                         "https://app.melcloud.com/Mitsubishi.Wifi.Client/Device/SetAta", headers, stream,
                         "application/json", 2000);
-                logger.debug("command executed");
+                logger.debug("command sent with response: " + response);
 
             } catch (IOException e) {
                 logger.debug("IO exception on sending command : " + e);

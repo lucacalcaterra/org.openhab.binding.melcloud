@@ -17,14 +17,11 @@ import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import javax.measure.quantity.Temperature;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.OnOffType;
-import org.eclipse.smarthome.core.library.types.QuantityType;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -64,27 +61,36 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
         if (command instanceof RefreshType) {
             // only for refresh. unused for now... muste be optimized
         } else {
+            Integer effectiveFlags = 0;
             DeviceStatus cmdtoSend = new DeviceStatus();
             if (CHANNEL_POWER.equals(channelUID.getId())) {
                 cmdtoSend.setPower((OnOffType) command == OnOffType.ON ? true : false);
+                effectiveFlags += 1;
             }
             if (CHANNEL_OPERATION_MODE.equals(channelUID.getId())) {
                 cmdtoSend.setOperationMode(((DecimalType) command).intValue());
+                effectiveFlags += 2;
             }
             if (CHANNEL_SET_TEMPERATURE.equals(channelUID.getId())) {
-                cmdtoSend.setSetTemperature(((QuantityType<Temperature>) command).doubleValue());
+                cmdtoSend.setSetTemperature(((DecimalType) command).doubleValue());
+                effectiveFlags += 4;
+
             }
             if (CHANNEL_SET_FAN_SPEED.equals(channelUID.getId())) {
                 cmdtoSend.setSetFanSpeed(((DecimalType) command).intValue());
+                effectiveFlags += 8;
             }
             if (CHANNEL_VANE_HORIZONTAL.equals(channelUID.getId())) {
                 cmdtoSend.setVaneHorizontal(((DecimalType) command).intValue());
+                effectiveFlags += 256;
             }
             if (CHANNEL_VANE_VERTICAL.equals(channelUID.getId())) {
                 cmdtoSend.setVaneVertical(((DecimalType) command).intValue());
+                effectiveFlags += 16;
             }
             logger.debug("devicestatus prepared for send command");
             cmdtoSend.setDeviceID(Integer.parseInt(thing.getProperties().get("deviceID")));
+            cmdtoSend.setEffectiveFlags(effectiveFlags);
             // sending command
             bridgeHandler.getConnectionHandler().sendCommand(cmdtoSend);
         }
