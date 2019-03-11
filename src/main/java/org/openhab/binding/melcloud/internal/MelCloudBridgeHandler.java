@@ -34,7 +34,6 @@ import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
 import org.openhab.binding.melcloud.json.Device;
 import org.openhab.binding.melcloud.json.DeviceStatus;
-import org.openhab.binding.melcloud.json.ListDevicesResponse;
 import org.openhab.binding.melcloud.json.LoginClientResponse;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -53,21 +52,20 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
     // private @Nullable LoginClientResponse loginClientRes;
-    private ListDevicesResponse listDevices;
     private @Nullable ScheduledFuture<?> refreshJob;
 
     private @Nullable ConnectionHandler connectionHandler;
     private @Nullable LoginClientResponse loginClientRes;
+    private static @Nullable List<Device> deviceList;
+    // private ListDevicesResponse listDevices;
 
     public @Nullable ConnectionHandler getConnectionHandler() {
         return connectionHandler;
     }
 
-    private static @Nullable List<Device> deviceList;
-
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
-        listDevices = new ListDevicesResponse();
+        // listDevices = new ListDevicesResponse();
 
     }
 
@@ -105,21 +103,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         // not needed
     }
 
-    @Override
-    public void updateStatus(ThingStatus newStatus) {
-        super.updateStatus(newStatus);
-    }
-
     public Map<ThingUID, @Nullable ServiceRegistration<?>> getDiscoveryServiceRegs() {
         return discoveryServiceRegs;
     }
 
     public void setDiscoveryServiceRegs(Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs) {
         this.discoveryServiceRegs = discoveryServiceRegs;
-    }
-
-    public ListDevicesResponse getListDevices() {
-        return listDevices;
     }
 
     @Override
@@ -148,17 +137,19 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         return deviceList;
     }
 
-    public @Nullable Device getdeviceById(int id) {
-
-        if (deviceList != null) {
-            for (Device device : deviceList) {
-                if (device.getDeviceID().equals(id)) {
-                    return device;
-                }
-            }
-        }
-        return null;
-    }
+    /*
+     * public @Nullable Device getdeviceById(int id) {
+     *
+     * if (deviceList != null) {
+     * for (Device device : deviceList) {
+     * if (device.getDeviceID().equals(id)) {
+     * return device;
+     * }
+     * }
+     * }
+     * return null;
+     * }
+     */
 
     /**
      * Start the job refreshing the data
@@ -202,7 +193,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                         .pollDeviceStatus(Integer.parseInt(thing.getProperties().get("deviceID")));
                 if (deviceStatus != null) {
                     for (Channel channel : handler.getChannels()) {
-                        handler.updateChannel(channel.getUID().getId(), deviceStatus);
+                        handler.updateChannels(channel.getUID().getId(), deviceStatus);
                         /*
                          * switch (channel.getUID().getId()) {
                          * case CHANNEL_POWER:

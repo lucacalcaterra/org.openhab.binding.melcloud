@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
 	<!-- ACDevice Thing Type -->
-	<thing-type id="acDevice">
+	<thing-type id="acDevice" listed="false">
 		<supported-bridge-type-refs>
 			<bridge-type-ref id="melCloudServerBridge" />
 		</supported-bridge-type-refs>
@@ -31,8 +31,6 @@
 		</channels>
 
 		<!-- config for device... For now i don't need it -->
-		<!-- <config-description> <parameter name="config1" type="text" required="true"> <label>Sample parameter</label> <description>This 
-			is a sample text configuration parameter.</description> </parameter> </config-description> -->
 
 	</thing-type>
 	<!-- Updatable channels -->
