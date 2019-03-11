@@ -48,6 +48,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     @Nullable
     private MelCloudConfiguration config;
     private @Nullable MelCloudBridgeHandler bridgeHandler;
+    private DeviceStatus deviceStatus = new DeviceStatus();
     DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
 
     public MelCloudDeviceHandler(Thing thing) {
@@ -63,7 +64,8 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
             logger.debug("refresh type");
         } else {
             Integer effectiveFlags = 0;
-            DeviceStatus cmdtoSend = new DeviceStatus();
+            // DeviceStatus cmdtoSend = new DeviceStatus();
+            DeviceStatus cmdtoSend = this.deviceStatus;
             if (CHANNEL_POWER.equals(channelUID.getId())) {
                 cmdtoSend.setPower((OnOffType) command == OnOffType.ON ? true : false);
                 effectiveFlags += 1;
@@ -123,6 +125,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     }
 
     public void updateChannels(String channelId, DeviceStatus deviceStatus) {
+        this.deviceStatus = deviceStatus;
         switch (channelId) {
 
             case CHANNEL_POWER:
