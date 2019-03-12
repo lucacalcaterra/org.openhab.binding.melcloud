@@ -20,8 +20,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * The {@link Device} is responsible of JSON data For MelCloud API
- * sent to one of the channels.
- *
+ * Device Structure.
+ * Generated with jsonschema2pojo
+ * 
  * @author LucaCalcaterra - Initial contribution
  */
 

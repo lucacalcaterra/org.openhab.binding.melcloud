@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
@@ -36,26 +37,29 @@ import com.google.gson.JsonObject;
  *
  * @author Luca Calcaterra - Initial Contribution
  */
+@NonNullByDefault
 public class ConnectionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
 
     private final Configuration config;
-    private boolean isConnected = false;
-    private static LoginClientResponse loginClientRes;
+    public boolean isConnected = false;
+    private static LoginClientResponse loginClientRes = new LoginClientResponse();
+    private static ListDevicesResponse listDevicesResponse = new ListDevicesResponse();
+
+    public static ListDevicesResponse getListDevicesResponse() {
+        return listDevicesResponse;
+    }
 
     public static LoginClientResponse getLoginClientRes() {
         return loginClientRes;
     }
 
-    private static ListDevicesResponse listDevicesResponse;
-
     public ConnectionHandler(Configuration config) {
         this.config = config;
     }
 
-    @Nullable
-    public LoginClientResponse login() {
+    public boolean login() {
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
                 || config.get(MelCloudBindingConstants.LOGIN_PASS) == null) {
             logger.debug("null parameter error, check config...!");
@@ -79,10 +83,10 @@ public class ConnectionHandler {
                         null, stream, "application/json", 20000);
                 logger.debug("loginPage=" + loginResponse);
                 Gson gson = new Gson();
-                loginClientRes = gson.fromJson(loginResponse, LoginClientResponse.class);
+                ConnectionHandler.loginClientRes = gson.fromJson(loginResponse, LoginClientResponse.class);
                 this.isConnected = true;
                 logger.debug("LoginClientRes assigned");
-                return loginClientRes;
+                return true;
             } catch (IOException e) {
                 logger.error("Connection error to: " + config.get(MelCloudBindingConstants.LOGIN_URL));
                 // loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
@@ -94,10 +98,10 @@ public class ConnectionHandler {
                 // loginResult.statusDescr = "@text/offline.uri-error-2";
             }
         }
-        return null;
+        return false;
     }
 
-    public ListDevicesResponse pollDevices() {
+    public boolean pollDevices() {
         if (isConnected) {
             try {
                 String response = null;
@@ -114,16 +118,17 @@ public class ConnectionHandler {
                 listDevicesResponse = gson.fromJson(response, ListDevicesResponse[].class)[0];
 
                 logger.debug("get response for list devices in json class");
-                return listDevicesResponse;
+                return true;
             } catch (IOException e) {
                 logger.debug("IO exception on PollDevices: " + e);
             } catch (IllegalArgumentException e) {
                 logger.debug("IllArguments exception on PollDevices: " + e);
             }
         }
-        return null;
+        return false;
     }
 
+    @Nullable
     public DeviceStatus pollDeviceStatus(Integer id) {
         if (isConnected) {
             try {

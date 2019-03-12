@@ -19,7 +19,6 @@ import java.util.List;
 
 import javax.measure.quantity.Temperature;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
@@ -33,8 +32,10 @@ import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
+import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
+import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
 import org.openhab.binding.melcloud.json.DeviceStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,18 +46,34 @@ import org.slf4j.LoggerFactory;
  *
  * @author LucaCalcaterra - Initial contribution
  */
-@NonNullByDefault
+
 public class MelCloudDeviceHandler extends BaseThingHandler {
 
     private final Logger logger = LoggerFactory.getLogger(MelCloudDeviceHandler.class);
     @Nullable
-    private MelCloudConfiguration config;
-    private @Nullable MelCloudBridgeHandler bridgeHandler;
+    // private MelCloudConfiguration config;
+    private MelCloudBridgeHandler bridgeHandler;
     private DeviceStatus deviceStatus = new DeviceStatus();
     DateTimeFormatter formatter = DateTimeFormatter.BASIC_ISO_DATE;
 
     public MelCloudDeviceHandler(Thing thing) {
         super(thing);
+    }
+
+    public MelCloudBridgeHandler getBridgeHandler() {
+        if (this.bridgeHandler == null) {
+            Bridge bridge = getBridge();
+            if (bridge == null) {
+                return null;
+            }
+            ThingHandler handler = bridge.getHandler();
+            if (handler instanceof MelCloudBridgeHandler) {
+                this.bridgeHandler = (MelCloudBridgeHandler) handler;
+            } else {
+                return null;
+            }
+        }
+        return this.bridgeHandler;
     }
 
     @Override
@@ -98,26 +115,29 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
             cmdtoSend.setDeviceID(Integer.parseInt(thing.getProperties().get("deviceID")));
             cmdtoSend.setEffectiveFlags(effectiveFlags);
             // sending command
-            bridgeHandler.getConnectionHandler().sendCommand(cmdtoSend);
+
+            MelCloudBridgeHandler bridgeHandler = this.bridgeHandler;
+            if (bridgeHandler != null) {
+                ConnectionHandler connectionHandler = bridgeHandler.getConnectionHandler();
+                if (connectionHandler != null) {
+                    connectionHandler.sendCommand(cmdtoSend);
+                }
+            }
         }
     }
 
     @Override
     public void initialize() {
-        // logger.debug("Start initializing!");
-        config = getConfigAs(MelCloudConfiguration.class);
 
         logger.debug("Initializing {} handler.", getThing().getThingTypeUID());
 
-        // String errorMsg = null;
         Bridge bridge = getBridge();
         if (bridge == null) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, "Bridge Not set");
             return;
         }
 
-        bridgeHandler = (MelCloudBridgeHandler) getBridge().getHandler();
-        if (bridgeHandler == null) {
+        if (getBridgeHandler() == null) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.BRIDGE_OFFLINE);
             return;
         }

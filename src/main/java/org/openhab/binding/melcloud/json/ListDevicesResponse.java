@@ -17,7 +17,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * The {@link ListDevicesResponse} is responsible of JSON data For MelCloud API
- * sent to one of the channels.
+ * Response of Devices List.
+ * Generated with jsonschema2pojo
  *
  * @author LucaCalcaterra - Initial contribution
  */

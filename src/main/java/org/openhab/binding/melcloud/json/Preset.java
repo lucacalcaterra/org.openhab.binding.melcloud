@@ -17,7 +17,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * The {@link Preset} is responsible of JSON data For MelCloud API
- * sent to one of the channels.
+ * Preset data
+ * Generated with jsonschema2pojo
  *
  * @author LucaCalcaterra - Initial contribution
  */

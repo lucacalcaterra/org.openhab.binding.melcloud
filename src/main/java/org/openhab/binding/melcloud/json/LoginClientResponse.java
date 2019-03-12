@@ -19,7 +19,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * The {@link LoginClientResponse} is responsible of JSON data For MelCloud API
- * sent to one of the channels.
+ * Response Data of Login.
+ * Generated with jsonschema2pojo
  *
  * @author LucaCalcaterra - Initial contribution
  */

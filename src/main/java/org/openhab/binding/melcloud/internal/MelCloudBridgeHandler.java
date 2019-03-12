@@ -51,21 +51,22 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private final Logger logger = LoggerFactory.getLogger(MelCloudBridgeHandler.class);
 
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
-    // private @Nullable LoginClientResponse loginClientRes;
     private @Nullable ScheduledFuture<?> refreshJob;
 
     private @Nullable ConnectionHandler connectionHandler;
     private @Nullable LoginClientResponse loginClientRes;
-    private static @Nullable List<Device> deviceList;
-    // private ListDevicesResponse listDevices;
+    private @Nullable List<Device> deviceList;
 
     public @Nullable ConnectionHandler getConnectionHandler() {
-        return connectionHandler;
+        if (this.connectionHandler != null) {
+            return connectionHandler;
+        }
+
+        return null;
     }
 
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
-        // listDevices = new ListDevicesResponse();
     }
 
     @Override
@@ -74,27 +75,31 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         Configuration config = getThing().getConfiguration();
         updateStatus(ThingStatus.UNKNOWN);
 
-        this.connectionHandler = new ConnectionHandler(config);
-        loginClientRes = connectionHandler.login();
-
-        // Updates the thing status accordingly
-        if ((loginClientRes != null) && (loginClientRes.getErrorId() == null)) {
-            try {
-                deviceList = connectionHandler.pollDevices().getStructure().getDevices();
-                updateStatus(ThingStatus.ONLINE);
-            } catch (Exception e) {
-                logger.debug("Illegal status transition to ONLINE");
+        try {
+            ConnectionHandler connectionHandler = new ConnectionHandler(config);
+            this.connectionHandler = connectionHandler;
+            if (connectionHandler.login()) {
+                LoginClientResponse loginClientRes = ConnectionHandler.getLoginClientRes();
+                this.loginClientRes = loginClientRes;
+                // Updates the thing status accordingly
+                if ((loginClientRes.getErrorId() == null)) {
+                    try {
+                        if (connectionHandler.pollDevices()) {
+                            deviceList = ConnectionHandler.getListDevicesResponse().getStructure().getDevices();
+                        }
+                        updateStatus(ThingStatus.ONLINE);
+                    } catch (Exception e) {
+                        logger.debug("Illegal status transition to ONLINE");
+                    }
+                } else {
+                    updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+                            "Connection error: Check Config or network");
+                }
+                startAutomaticRefresh();
             }
-        } else {
-            /*
-             * loginResult.error = loginResult.error.trim();
-             * logger.debug("Disabling thing '{}': Error '{}': {}", getThing().getUID(), loginResult.error,
-             * loginResult.errorDetail);
-             */
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                    "Connection error: Check Config or network");
+        } catch (Exception e) {
+            logger.debug("exception on login...");
         }
-        startAutomaticRefresh();
     }
 
     @Override
@@ -121,11 +126,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         super.handleRemoval();
     }
 
-    /*
-     * public Map<Integer, String> getSiteList() {
-     * return loginResult == null ? new HashMap<Integer, String>() : loginResult.siteList;
-     * }
-     */
     public ThingUID getID() {
         return getThing().getUID();
     }
@@ -134,20 +134,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         logger.debug("got Device List...");
         return deviceList;
     }
-
-    /*
-     * public @Nullable Device getdeviceById(int id) {
-     *
-     * if (deviceList != null) {
-     * for (Device device : deviceList) {
-     * if (device.getDeviceID().equals(id)) {
-     * return device;
-     * }
-     * }
-     * }
-     * return null;
-     * }
-     */
 
     /**
      * Start the job refreshing the data
@@ -163,7 +149,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             };
 
             int delay = 30;
-            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 4, delay, TimeUnit.SECONDS);
+            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 6, delay, TimeUnit.SECONDS);
         }
     }
 
@@ -171,14 +157,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     public void childHandlerInitialized(ThingHandler childHandler, Thing childThing) {
         // TODO: Auto-generated method stub
         super.childHandlerInitialized(childHandler, childThing);
-        // updateThings();
     }
 
     private synchronized void updateThings() {
         for (Thing thing : getThing().getThings()) {
             MelCloudDeviceHandler handler = (MelCloudDeviceHandler) thing.getHandler();
             if (handler instanceof MelCloudDeviceHandler) {
-                // MelCloudDeviceHandler devicehandler = new MelCloudDeviceHandler(thing);
                 try {
                     handler.updateStatus(ThingStatus.ONLINE);
                 } catch (Exception e) {
@@ -186,18 +170,14 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                 }
 
                 // Device device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
-                DeviceStatus deviceStatus = connectionHandler
-                        .pollDeviceStatus(Integer.parseInt(thing.getProperties().get("deviceID")));
-                if (deviceStatus != null) {
-                    for (Channel channel : handler.getChannels()) {
-                        handler.updateChannels(channel.getUID().getId(), deviceStatus);
-                        /*
-                         * switch (channel.getUID().getId()) {
-                         * case CHANNEL_POWER:
-                         * updateState(channel.getUID(), OnOffType.ON);
-                         *
-                         * }
-                         */
+                ConnectionHandler connectionHandler = this.connectionHandler;
+                if (connectionHandler != null && connectionHandler.isConnected) {
+                    DeviceStatus deviceStatus = connectionHandler
+                            .pollDeviceStatus(Integer.parseInt(thing.getProperties().get("deviceID")));
+                    if (deviceStatus != null) {
+                        for (Channel channel : handler.getChannels()) {
+                            handler.updateChannels(channel.getUID().getId(), deviceStatus);
+                        }
                     }
                 }
             }
