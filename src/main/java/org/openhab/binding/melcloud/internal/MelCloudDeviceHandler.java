@@ -121,6 +121,10 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 ConnectionHandler connectionHandler = bridgeHandler.getConnectionHandler();
                 if (connectionHandler != null) {
                     connectionHandler.sendCommand(cmdtoSend);
+                    for (Channel channel : getChannels()) {
+                        updateChannels(channel.getUID().getId(), this.deviceStatus);
+                    }
+
                 }
             }
         }

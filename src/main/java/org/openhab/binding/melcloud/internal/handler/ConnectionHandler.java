@@ -46,6 +46,7 @@ public class ConnectionHandler {
     public boolean isConnected = false;
     private static LoginClientResponse loginClientRes = new LoginClientResponse();
     private static ListDevicesResponse listDevicesResponse = new ListDevicesResponse();
+    private DeviceStatus deviceStatus = new DeviceStatus();
 
     public static ListDevicesResponse getListDevicesResponse() {
         return listDevicesResponse;
@@ -140,9 +141,9 @@ public class ConnectionHandler {
 
                 response = HttpUtil.executeUrl("GET", url, headers, null, null, 2000);
                 Gson gson = new Gson();
-                DeviceStatus deviceStatus = gson.fromJson(response, DeviceStatus.class);
+                this.deviceStatus = gson.fromJson(response, DeviceStatus.class);
                 logger.debug("returned device status");
-                return deviceStatus;
+                return this.deviceStatus;
             } catch (IOException e) {
                 logger.debug("IO exception on polling specific device status: " + e);
             } catch (IllegalArgumentException e) {
@@ -162,7 +163,6 @@ public class ConnectionHandler {
                 // Prepare params
                 Gson gson = new Gson();
 
-                // String contentfromgson = gson.toJson(cmd, DeviceStatus.class);
                 String content = gson.toJson(deviceStatusToPost, DeviceStatus.class);
                 InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
@@ -172,6 +172,8 @@ public class ConnectionHandler {
                         "https://app.melcloud.com/Mitsubishi.Wifi.Client/Device/SetAta", headers, stream,
                         "application/json", 2000);
                 logger.debug("command sent with response: " + response);
+
+                // setting the new status of device from response (instead waiting for scheduler refresh)
             } catch (IOException e) {
                 logger.debug("IO exception on sending command : " + e);
             } catch (IllegalArgumentException e) {

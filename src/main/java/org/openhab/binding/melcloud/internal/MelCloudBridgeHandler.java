@@ -159,7 +159,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         super.childHandlerInitialized(childHandler, childThing);
     }
 
-    private synchronized void updateThings() {
+    // check connection and , in case, re-login
+    private void checkHealth() {
+
+    }
+
+    public synchronized void updateThings() {
         for (Thing thing : getThing().getThings()) {
             MelCloudDeviceHandler handler = (MelCloudDeviceHandler) thing.getHandler();
             if (handler instanceof MelCloudDeviceHandler) {

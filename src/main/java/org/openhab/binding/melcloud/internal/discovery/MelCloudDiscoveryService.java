@@ -69,17 +69,11 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
         createResults();
     }
 
-    /*
-     * @Override
-     * protected void startBackgroundDiscovery() {
-     * if (discoveryJob == null) {
-     * discoveryJob = scheduler.scheduleWithFixedDelay(() -> {
-     * createResults();
-     * }, 0, 24, TimeUnit.HOURS);
-     * logger.debug("Scheduled MelCloud-changed job every {} hours", 24);
-     * }
-     * }
-     */
+    @Override
+    protected void startBackgroundDiscovery() {
+        // Not implemented and probably never will...
+    }
+
     private synchronized void createResults() {
         logger.debug("createResults()");
         ThingUID bridgeUID = bridgeHandler.getThing().getUID();
