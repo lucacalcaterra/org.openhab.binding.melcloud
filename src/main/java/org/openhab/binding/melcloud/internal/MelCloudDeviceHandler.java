@@ -17,11 +17,15 @@ import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.measure.quantity.Temperature;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.OnOffType;
+import org.eclipse.smarthome.core.library.types.QuantityType;
+import org.eclipse.smarthome.core.library.unit.SIUnits;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -75,7 +79,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 effectiveFlags += 2;
             }
             if (CHANNEL_SET_TEMPERATURE.equals(channelUID.getId())) {
-                cmdtoSend.setSetTemperature(((DecimalType) command).doubleValue());
+                cmdtoSend.setSetTemperature(((QuantityType<Temperature>) command).doubleValue());
                 effectiveFlags += 4;
             }
             if (CHANNEL_SET_FAN_SPEED.equals(channelUID.getId())) {
@@ -135,7 +139,8 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 updateState(CHANNEL_OPERATION_MODE, new DecimalType(deviceStatus.getOperationMode()));
                 break;
             case CHANNEL_SET_TEMPERATURE:
-                updateState(CHANNEL_SET_TEMPERATURE, new DecimalType(deviceStatus.getSetTemperature()));
+                updateState(CHANNEL_SET_TEMPERATURE,
+                        new QuantityType<Temperature>(deviceStatus.getSetTemperature(), SIUnits.CELSIUS));
                 break;
             case CHANNEL_SET_FAN_SPEED:
                 updateState(CHANNEL_SET_FAN_SPEED, new DecimalType(deviceStatus.getSetFanSpeed()));

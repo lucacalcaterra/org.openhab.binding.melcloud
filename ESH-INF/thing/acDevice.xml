@@ -54,10 +54,10 @@
 		</state>
 	</channel-type>
 	<channel-type id="setTemperature-channel">
-		<item-type>Number</item-type>
+		<item-type>Number:Temperature</item-type>
 		<label>Set Temperature</label>
 		<description>Set Temperature</description>
-		<state min="10" max="40" step="0.5" pattern="%d °C" readOnly="false" />
+		<state min="10" max="40" step="0.5" pattern="%.1f %unit%" readOnly="false" />
 	</channel-type>
 	<channel-type id="setFanSpeed-channel">
 		<item-type>Number</item-type>
