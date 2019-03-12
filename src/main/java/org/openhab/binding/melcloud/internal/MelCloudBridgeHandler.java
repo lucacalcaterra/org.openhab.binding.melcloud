@@ -174,7 +174,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                     logger.debug("Illegal status transition to ONLINE of thing");
                 }
 
-                // Device device = getdeviceById(Integer.parseInt(thing.getProperties().get("deviceID")));
                 ConnectionHandler connectionHandler = this.connectionHandler;
                 if (connectionHandler != null && connectionHandler.isConnected) {
                     DeviceStatus deviceStatus = connectionHandler

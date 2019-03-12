@@ -66,7 +66,6 @@ public class ConnectionHandler {
             logger.debug("null parameter error, check config...!");
         } else {
             try {
-                // Document document = null;
                 String loginResponse = null;
                 JsonObject jsonReq = new JsonObject();
                 jsonReq.addProperty("Email", (String) config.get(MelCloudBindingConstants.LOGIN_USERNAME));
@@ -76,7 +75,6 @@ public class ConnectionHandler {
                 jsonReq.addProperty("Persist", false);
                 jsonReq.addProperty("CaptchaResponse", (String) null);
 
-                // String content = MelCloudBindingConstants.WEBPASS;
                 String content = jsonReq.toString();
                 InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
@@ -90,13 +88,8 @@ public class ConnectionHandler {
                 return true;
             } catch (IOException e) {
                 logger.error("Connection error to: " + config.get(MelCloudBindingConstants.LOGIN_URL));
-                // loginResult.error += "Connection error to " + config.get(MelCloudBindingConstants.LOGIN_URL);
-                // loginResult.errorDetail = e.getMessage();
-                // loginResult.statusDescr = "@text/offline.uri-error-1";
             } catch (IllegalArgumentException e) {
-                // loginResult.error += "caught exception !";
-                // loginResult.errorDetail = e.getMessage();
-                // loginResult.statusDescr = "@text/offline.uri-error-2";
+                logger.error("IllegalArgumentException");
             }
         }
         return false;
@@ -113,9 +106,7 @@ public class ConnectionHandler {
                 response = HttpUtil.executeUrl("GET",
                         "https://app.melcloud.com/Mitsubishi.Wifi.Client/User/ListDevices", headers, null, null, 20000);
                 logger.debug("get response for list devices");
-                // return serverDatasHandler;
                 Gson gson = new Gson();
-                // ServerDatasHandler[] s = gson.fromJson(response, ServerDatasHandler[].class);
                 listDevicesResponse = gson.fromJson(response, ListDevicesResponse[].class)[0];
 
                 logger.debug("get response for list devices in json class");
