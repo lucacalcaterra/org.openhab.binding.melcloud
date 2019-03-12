@@ -55,8 +55,7 @@ public class ConnectionHandler {
     }
 
     @Nullable
-    public LoginClientResponse Login() {
-
+    public LoginClientResponse login() {
         if (config.get(MelCloudBindingConstants.LOGIN_USERNAME) == null
                 || config.get(MelCloudBindingConstants.LOGIN_PASS) == null) {
             logger.debug("null parameter error, check config...!");
@@ -116,7 +115,6 @@ public class ConnectionHandler {
 
                 logger.debug("get response for list devices in json class");
                 return listDevicesResponse;
-
             } catch (IOException e) {
                 logger.debug("IO exception on PollDevices: " + e);
             } catch (IllegalArgumentException e) {
@@ -127,7 +125,6 @@ public class ConnectionHandler {
     }
 
     public DeviceStatus pollDeviceStatus(Integer id) {
-
         if (isConnected) {
             try {
                 String response = null;
@@ -141,22 +138,17 @@ public class ConnectionHandler {
                 DeviceStatus deviceStatus = gson.fromJson(response, DeviceStatus.class);
                 logger.debug("returned device status");
                 return deviceStatus;
-
             } catch (IOException e) {
                 logger.debug("IO exception on polling specific device status: " + e);
             } catch (IllegalArgumentException e) {
                 logger.debug("IllArguments exception on polling specific device status: " + e);
             }
-
         }
         return null;
-
     }
 
     public boolean sendCommand(DeviceStatus deviceStatusToPost) {
-
         if (isConnected) {
-
             try {
                 deviceStatusToPost.setHasPendingCommand(true);
 
@@ -175,15 +167,12 @@ public class ConnectionHandler {
                         "https://app.melcloud.com/Mitsubishi.Wifi.Client/Device/SetAta", headers, stream,
                         "application/json", 2000);
                 logger.debug("command sent with response: " + response);
-
             } catch (IOException e) {
                 logger.debug("IO exception on sending command : " + e);
             } catch (IllegalArgumentException e) {
                 logger.debug("IllArguments exception on sending command: " + e);
             }
-
         }
         return false;
-
     }
 }

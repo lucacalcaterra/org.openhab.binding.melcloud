@@ -66,7 +66,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     public MelCloudBridgeHandler(Bridge bridge) {
         super(bridge);
         // listDevices = new ListDevicesResponse();
-
     }
 
     @Override
@@ -76,7 +75,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         updateStatus(ThingStatus.UNKNOWN);
 
         this.connectionHandler = new ConnectionHandler(config);
-        loginClientRes = connectionHandler.Login();
+        loginClientRes = connectionHandler.login();
 
         // Updates the thing status accordingly
         if ((loginClientRes != null) && (loginClientRes.getErrorId() == null)) {
@@ -132,7 +131,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     }
 
     public @Nullable List<Device> getdeviceList() {
-
         logger.debug("got Device List...");
         return deviceList;
     }
@@ -171,13 +169,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     @Override
     public void childHandlerInitialized(ThingHandler childHandler, Thing childThing) {
-        // TODO Auto-generated method stub
+        // TODO: Auto-generated method stub
         super.childHandlerInitialized(childHandler, childThing);
         // updateThings();
     }
 
     private synchronized void updateThings() {
-
         for (Thing thing : getThing().getThings()) {
             MelCloudDeviceHandler handler = (MelCloudDeviceHandler) thing.getHandler();
             if (handler instanceof MelCloudDeviceHandler) {

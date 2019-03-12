@@ -131,7 +131,6 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     public void updateChannels(String channelId, DeviceStatus deviceStatus) {
         this.deviceStatus = deviceStatus;
         switch (channelId) {
-
             case CHANNEL_POWER:
                 updateState(CHANNEL_POWER, deviceStatus.getPower() ? OnOffType.ON : OnOffType.OFF);
                 break;
@@ -175,7 +174,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
     @Override
     protected void updateStatus(ThingStatus status) {
-        // (TODO)|(FIXME) Auto-generated method stub
+        // (TODO) Auto-generated method stub
         super.updateStatus(status);
     }
 }

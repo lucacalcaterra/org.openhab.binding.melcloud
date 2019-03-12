@@ -441,5 +441,4 @@ public class ListDevicesResponse {
     public void setQuantizedCoordinates(QuantizedCoordinates quantizedCoordinates) {
         this.quantizedCoordinates = quantizedCoordinates;
     }
-
 }

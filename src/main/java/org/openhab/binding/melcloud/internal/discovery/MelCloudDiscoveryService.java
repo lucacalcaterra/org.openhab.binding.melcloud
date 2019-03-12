@@ -115,7 +115,6 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
                 logger.debug("finish list of devices");
             }
         }
-
     }
 
     @Override

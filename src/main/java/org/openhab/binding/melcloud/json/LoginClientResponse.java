@@ -157,5 +157,4 @@ public class LoginClientResponse {
     public void setLoginAttempts(Integer loginAttempts) {
         this.loginAttempts = loginAttempts;
     }
-
 }
