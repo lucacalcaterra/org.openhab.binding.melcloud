@@ -33,7 +33,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
- * The {@link ConnectionHandler} Manage connection to Mitsubishi Cloud.
+ * The {@link ConnectionHandler} Manage connection to Mitsubishi Cloud (MelCloud).
  *
  * @author Luca Calcaterra - Initial Contribution
  */
