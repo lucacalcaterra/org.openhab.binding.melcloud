@@ -123,7 +123,6 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                     for (Channel channel : getChannels()) {
                         updateChannels(channel.getUID().getId(), this.deviceStatus);
                     }
-
                 }
             }
         }
@@ -131,7 +130,6 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
-
         logger.debug("Initializing {} handler.", getThing().getThingTypeUID());
 
         Bridge bridge = getBridge();
@@ -197,7 +195,6 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
     @Override
     protected void updateStatus(ThingStatus status) {
-        // (TODO) Auto-generated method stub
         super.updateStatus(status);
     }
 }

@@ -34,7 +34,6 @@ import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.internal.Connection;
 import org.openhab.binding.melcloud.internal.json.Device;
 import org.openhab.binding.melcloud.internal.json.DeviceStatus;
-import org.openhab.binding.melcloud.internal.json.LoginClientResponse;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +53,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private @Nullable ScheduledFuture<?> refreshJob;
 
     private @Nullable Connection connection;
-    private @Nullable LoginClientResponse loginClientRes;
+    // private @Nullable LoginClientResponse loginClientRes;
     private @Nullable List<Device> deviceList;
 
     public @Nullable Connection getConnectionHandler() {
@@ -76,7 +75,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         this.connection = new Connection(config);
 
         startAutomaticRefresh();
-
     }
 
     @Override
@@ -116,10 +114,12 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
      * Start the job refreshing the data
      */
     private void startAutomaticRefresh() {
+        ScheduledFuture<?> refreshJob = this.refreshJob;
         if (refreshJob == null || refreshJob.isCancelled()) {
             Runnable runnable = () -> {
                 try {
-                    if (this.connection != null && !this.connection.isConnected) {
+                    Connection connection = this.connection;
+                    if (connection != null && !connection.isConnected) {
                         updateStatus(ThingStatus.UNKNOWN);
                         connect();
                     }
@@ -136,7 +136,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     @Override
     public void childHandlerInitialized(ThingHandler childHandler, Thing childThing) {
-        // TODO: Auto-generated method stub
         super.childHandlerInitialized(childHandler, childThing);
     }
 
@@ -147,16 +146,17 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         logger.debug("Initializing connection to MelCloud from Bridge...");
         updateStatus(ThingStatus.UNKNOWN);
         try {
+            Connection connection = this.connection;
             if (connection != null) {
                 if (connection.login()) {
-                    LoginClientResponse loginClientRes = Connection.getLoginClientRes();
-                    this.loginClientRes = loginClientRes;
+                    // LoginClientResponse loginClientRes = Connection.getLoginClientRes();
+                    // this.loginClientRes = loginClientRes;
                     // Updates the thing status accordingly
-                    if ((loginClientRes.getErrorId() == null)) {
+                    if (connection.getLoginClientRes().getErrorId() == null) {
                         try {
-                            if (connection != null && connection.pollDevices()) {
-                                deviceList = Connection.getListDevicesResponse().getStructure().getDevices();
-                            }
+                            connection.pollDevices();
+                            deviceList = connection.getListDevicesResponse().getStructure().getDevices();
+                            this.connection = connection;
                             updateStatus(ThingStatus.ONLINE);
                         } catch (Exception e) {
                             logger.debug("Illegal status transition to ONLINE");
@@ -173,7 +173,6 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                     "cannot login: check config or network");
         }
-
     }
 
     public void updateThings() {

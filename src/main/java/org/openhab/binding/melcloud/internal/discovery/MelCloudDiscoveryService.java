@@ -114,6 +114,7 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
     @Override
     protected void stopBackgroundDiscovery() {
         logger.debug("Stopping MelCloud background discovery");
+        ScheduledFuture<?> discoveryJob = this.discoveryJob;
         if (discoveryJob != null && !discoveryJob.isCancelled()) {
             if (discoveryJob.cancel(true)) {
                 discoveryJob = null;

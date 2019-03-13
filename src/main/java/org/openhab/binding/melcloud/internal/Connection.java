@@ -45,13 +45,12 @@ public class Connection {
     public boolean isConnected = false;
     private static LoginClientResponse loginClientRes = new LoginClientResponse();
     private static ListDevicesResponse listDevicesResponse = new ListDevicesResponse();
-    private DeviceStatus deviceStatus = new DeviceStatus();
 
-    public static ListDevicesResponse getListDevicesResponse() {
+    public ListDevicesResponse getListDevicesResponse() {
         return listDevicesResponse;
     }
 
-    public static LoginClientResponse getLoginClientRes() {
+    public LoginClientResponse getLoginClientRes() {
         return loginClientRes;
     }
 
@@ -106,7 +105,7 @@ public class Connection {
                         "https://app.melcloud.com/Mitsubishi.Wifi.Client/User/ListDevices", headers, null, null, 20000);
                 logger.debug("get response for list devices");
                 Gson gson = new Gson();
-                listDevicesResponse = gson.fromJson(response, ListDevicesResponse[].class)[0];
+                Connection.listDevicesResponse = gson.fromJson(response, ListDevicesResponse[].class)[0];
 
                 logger.debug("get response for list devices in json class");
                 return true;
@@ -131,9 +130,10 @@ public class Connection {
 
                 response = HttpUtil.executeUrl("GET", url, headers, null, null, 2000);
                 Gson gson = new Gson();
-                this.deviceStatus = gson.fromJson(response, DeviceStatus.class);
+                DeviceStatus deviceStatus = new DeviceStatus();
+                deviceStatus = gson.fromJson(response, DeviceStatus.class);
                 logger.debug("returned device status");
-                return this.deviceStatus;
+                return deviceStatus;
             } catch (IOException e) {
                 logger.debug("IO exception on polling specific device status: " + e);
             } catch (IllegalArgumentException e) {

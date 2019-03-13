@@ -75,7 +75,6 @@ public class MelCloudHandlerFactory extends BaseThingHandlerFactory {
     }
 
     private void registerDiscoveryService(MelCloudBridgeHandler bridgeHandler) {
-        // (TODO) Auto-generated method stub
         MelCloudDiscoveryService discoveryService = new MelCloudDiscoveryService(bridgeHandler);
         bridgeHandler.getDiscoveryServiceRegs().put(bridgeHandler.getThing().getUID(), bundleContext
                 .registerService(DiscoveryService.class.getName(), discoveryService, new Hashtable<String, Object>()));
