@@ -1,5 +1,7 @@
 #  MelCloud Binding 
 
+[![Build Status](https://travis-ci.org/lucacalcaterra/org.openhab.binding.melcloud.svg?branch=master)](https://travis-ci.org/lucacalcaterra/org.openhab.binding.melcloud)
+
 Unofficial Mitsubishi MelCloud Binding for Openhab.
 
 Pre-Alpha for testing and collect issues from users.
