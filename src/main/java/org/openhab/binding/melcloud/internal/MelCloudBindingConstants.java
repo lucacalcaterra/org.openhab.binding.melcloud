@@ -29,6 +29,7 @@ public class MelCloudBindingConstants {
 
     private static final String BINDING_ID = "melcloud";
 
+    public static final String POLLING_INTERVAL = "pollingInterval";
     // List of all Main Bridge properties
     public static final String LOGIN_USERNAME = "username";
     public static final String LOGIN_PASS = "webpass";

@@ -22,6 +22,11 @@
 				<description>Change the Language Id (default 0 for English), i.e. 19 For Italian, others on README</description>
 				<default>0</default>
 			</parameter>
+			<parameter name="pollingInterval" type="integer" required="true">
+                <label>Polling Interval</label>
+                <description>Time interval before Bridge polling data from MelCloud</description>
+                <default>60</default>
+            </parameter>
 			<parameter name="loginAppVersion" type="text" required="true">
 				<label>App Version (of WebClient)-</label>
 				<description>Not Change it</description>

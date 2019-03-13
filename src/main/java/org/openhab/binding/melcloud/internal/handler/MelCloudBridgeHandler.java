@@ -12,6 +12,9 @@
  */
 package org.openhab.binding.melcloud.internal.handler;
 
+import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.POLLING_INTERVAL;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +77,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         Configuration config = getThing().getConfiguration();
         this.connection = new Connection(config);
 
-        startAutomaticRefresh();
+        startAutomaticRefresh(((BigDecimal) config.get(POLLING_INTERVAL)).longValue());
     }
 
     @Override
@@ -113,7 +116,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     /**
      * Start the job refreshing the data
      */
-    private void startAutomaticRefresh() {
+    private void startAutomaticRefresh(long interval) {
         ScheduledFuture<?> refreshJob = this.refreshJob;
         if (refreshJob == null || refreshJob.isCancelled()) {
             Runnable runnable = () -> {
@@ -129,8 +132,8 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                 }
             };
 
-            int delay = 30;
-            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 6, delay, TimeUnit.SECONDS);
+            // int delay = 30;
+            refreshJob = scheduler.scheduleWithFixedDelay(runnable, 10, interval, TimeUnit.SECONDS);
         }
     }
 
