@@ -74,7 +74,7 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
         // Not implemented and probably never will...
     }
 
-    private synchronized void createResults() {
+    private void createResults() {
         logger.debug("createResults()");
         ThingUID bridgeUID = bridgeHandler.getThing().getUID();
         if (bridgeHandler.getThing().getThingTypeUID().equals(LOGIN_BRIDGE_THING_TYPE)) {

@@ -73,33 +73,10 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     public void initialize() {
         logger.debug("Initializing MelCloud main bridge handler.");
         Configuration config = getThing().getConfiguration();
-        updateStatus(ThingStatus.UNKNOWN);
+        this.connectionHandler = new ConnectionHandler(config);
 
-        try {
-            ConnectionHandler connectionHandler = new ConnectionHandler(config);
-            this.connectionHandler = connectionHandler;
-            if (connectionHandler.login()) {
-                LoginClientResponse loginClientRes = ConnectionHandler.getLoginClientRes();
-                this.loginClientRes = loginClientRes;
-                // Updates the thing status accordingly
-                if ((loginClientRes.getErrorId() == null)) {
-                    try {
-                        if (connectionHandler.pollDevices()) {
-                            deviceList = ConnectionHandler.getListDevicesResponse().getStructure().getDevices();
-                        }
-                        updateStatus(ThingStatus.ONLINE);
-                    } catch (Exception e) {
-                        logger.debug("Illegal status transition to ONLINE");
-                    }
-                } else {
-                    updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                            "Connection error: Check Config or network");
-                }
-                startAutomaticRefresh();
-            }
-        } catch (Exception e) {
-            logger.debug("exception on login...");
-        }
+        startAutomaticRefresh();
+
     }
 
     @Override
@@ -142,6 +119,10 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         if (refreshJob == null || refreshJob.isCancelled()) {
             Runnable runnable = () -> {
                 try {
+                    if (this.connectionHandler != null && !this.connectionHandler.isConnected) {
+                        updateStatus(ThingStatus.UNKNOWN);
+                        connect();
+                    }
                     updateThings();
                 } catch (Exception e) {
                     logger.error("Exception occurred during execution: {}", e.getMessage(), e);
@@ -160,11 +141,42 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     }
 
     // check connection and , in case, re-login
-    private void checkHealth() {
+    private void connect() {
+        // ConnectionHandler connectionHandler = this.connectionHandler;
+        // check if logged out... in case re-login
+        logger.debug("Initializing connection to MelCloud from Bridge...");
+        updateStatus(ThingStatus.UNKNOWN);
+        try {
+            if (connectionHandler != null) {
+                if (connectionHandler.login()) {
+                    LoginClientResponse loginClientRes = ConnectionHandler.getLoginClientRes();
+                    this.loginClientRes = loginClientRes;
+                    // Updates the thing status accordingly
+                    if ((loginClientRes.getErrorId() == null)) {
+                        try {
+                            if (connectionHandler != null && connectionHandler.pollDevices()) {
+                                deviceList = ConnectionHandler.getListDevicesResponse().getStructure().getDevices();
+                            }
+                            updateStatus(ThingStatus.ONLINE);
+                        } catch (Exception e) {
+                            logger.debug("Illegal status transition to ONLINE");
+                        }
+                    } else {
+                        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+                                "Invalid response on login to MelCloud: check config");
+                    }
+                }
+            }
+        } catch (
+
+        Exception e) {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+                    "cannot login: check config or network");
+        }
 
     }
 
-    public synchronized void updateThings() {
+    public void updateThings() {
         for (Thing thing : getThing().getThings()) {
             MelCloudDeviceHandler handler = (MelCloudDeviceHandler) thing.getHandler();
             if (handler instanceof MelCloudDeviceHandler) {
