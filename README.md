@@ -67,5 +67,7 @@ TODO: Add Doc for manually configuring items .
 I am not a great java expert and since the binding is in beta testing we accept advice, reporting problems, or even better collaborations with experienced developers.
 
 Author: Luca Calcaterra .
+
 # NOTICE
+
 This is not an official binding, and the author has no connection with Mitsubishi, nor has the company provided any information. The author made it only out of necessity and passion.
