@@ -29,6 +29,8 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.openhab.binding.melcloud.internal.discovery.MelCloudDiscoveryService;
+import org.openhab.binding.melcloud.internal.handler.MelCloudBridgeHandler;
+import org.openhab.binding.melcloud.internal.handler.MelCloudDeviceHandler;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
