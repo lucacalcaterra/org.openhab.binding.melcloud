@@ -76,8 +76,9 @@ public class Connection {
                 String content = jsonReq.toString();
                 InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
-                loginResponse = HttpUtil.executeUrl("POST", (String) config.get(MelCloudBindingConstants.LOGIN_URL),
-                        null, stream, "application/json", 20000);
+                loginResponse = HttpUtil.executeUrl("POST",
+                        "https://app.melcloud.com/Mitsubishi.Wifi.Client/Login/ClientLogin", null, stream,
+                        "application/json", 20000);
                 logger.debug("loginPage=" + loginResponse);
                 Gson gson = new Gson();
                 Connection.loginClientRes = gson.fromJson(loginResponse, LoginClientResponse.class);

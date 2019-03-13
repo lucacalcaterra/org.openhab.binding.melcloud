@@ -17,20 +17,10 @@
 				<label>Password</label>
 				<description>WEB password</description>
 			</parameter>
-			<!-- <parameter name="webUIUrl" type="text" required="true"> -->
-			<!-- <label>url to MEL Cloud WEB UI</label> -->
-			<!-- <description>Change this only if you know what you are doing.</description> -->
-			<!-- <default>https://app.melcloud.com/</default> -->
-			<!-- </parameter> -->
-			<parameter name="loginUrl" type="text" required="true">
-				<label>url to MEL Cloud WEB UI</label>
-				<description>Change this only if you know what you are doing.</description>
-				<default>https://app.melcloud.com/Mitsubishi.Wifi.Client/Login/ClientLogin</default>
-			</parameter>
 			<parameter name="loginLanguageId" type="integer" required="true">
-				<label>id LanguageI</label>
-				<description>Change the Language Id (I.e. 0 for English, 19 For Italian)</description>
-				<default>19</default>
+				<label>id Language</label>
+				<description>Change the Language Id (default 0 for English), i.e. 19 For Italian, others on README</description>
+				<default>0</default>
 			</parameter>
 			<parameter name="loginAppVersion" type="text" required="true">
 				<label>App Version (of WebClient)-</label>
