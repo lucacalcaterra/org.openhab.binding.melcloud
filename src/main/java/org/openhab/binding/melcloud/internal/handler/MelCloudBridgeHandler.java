@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.melcloud.internal;
+package org.openhab.binding.melcloud.internal.handler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +31,10 @@ import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
-import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
-import org.openhab.binding.melcloud.json.Device;
-import org.openhab.binding.melcloud.json.DeviceStatus;
-import org.openhab.binding.melcloud.json.LoginClientResponse;
+import org.openhab.binding.melcloud.internal.Connection;
+import org.openhab.binding.melcloud.internal.json.Device;
+import org.openhab.binding.melcloud.internal.json.DeviceStatus;
+import org.openhab.binding.melcloud.internal.json.LoginClientResponse;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,13 +53,13 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     private Map<ThingUID, @Nullable ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
     private @Nullable ScheduledFuture<?> refreshJob;
 
-    private @Nullable ConnectionHandler connectionHandler;
+    private @Nullable Connection connection;
     private @Nullable LoginClientResponse loginClientRes;
     private @Nullable List<Device> deviceList;
 
-    public @Nullable ConnectionHandler getConnectionHandler() {
-        if (this.connectionHandler != null) {
-            return connectionHandler;
+    public @Nullable Connection getConnectionHandler() {
+        if (this.connection != null) {
+            return connection;
         }
 
         return null;
@@ -73,7 +73,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
     public void initialize() {
         logger.debug("Initializing MelCloud main bridge handler.");
         Configuration config = getThing().getConfiguration();
-        this.connectionHandler = new ConnectionHandler(config);
+        this.connection = new Connection(config);
 
         startAutomaticRefresh();
 
@@ -119,7 +119,7 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
         if (refreshJob == null || refreshJob.isCancelled()) {
             Runnable runnable = () -> {
                 try {
-                    if (this.connectionHandler != null && !this.connectionHandler.isConnected) {
+                    if (this.connection != null && !this.connection.isConnected) {
                         updateStatus(ThingStatus.UNKNOWN);
                         connect();
                     }
@@ -142,20 +142,20 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
 
     // check connection and , in case, re-login
     private void connect() {
-        // ConnectionHandler connectionHandler = this.connectionHandler;
+        // Connection connection = this.connectionHandler;
         // check if logged out... in case re-login
         logger.debug("Initializing connection to MelCloud from Bridge...");
         updateStatus(ThingStatus.UNKNOWN);
         try {
-            if (connectionHandler != null) {
-                if (connectionHandler.login()) {
-                    LoginClientResponse loginClientRes = ConnectionHandler.getLoginClientRes();
+            if (connection != null) {
+                if (connection.login()) {
+                    LoginClientResponse loginClientRes = Connection.getLoginClientRes();
                     this.loginClientRes = loginClientRes;
                     // Updates the thing status accordingly
                     if ((loginClientRes.getErrorId() == null)) {
                         try {
-                            if (connectionHandler != null && connectionHandler.pollDevices()) {
-                                deviceList = ConnectionHandler.getListDevicesResponse().getStructure().getDevices();
+                            if (connection != null && connection.pollDevices()) {
+                                deviceList = Connection.getListDevicesResponse().getStructure().getDevices();
                             }
                             updateStatus(ThingStatus.ONLINE);
                         } catch (Exception e) {
@@ -186,9 +186,9 @@ public class MelCloudBridgeHandler extends BaseBridgeHandler {
                     logger.debug("Illegal status transition to ONLINE of thing");
                 }
 
-                ConnectionHandler connectionHandler = this.connectionHandler;
-                if (connectionHandler != null && connectionHandler.isConnected) {
-                    DeviceStatus deviceStatus = connectionHandler
+                Connection connection = this.connection;
+                if (connection != null && connection.isConnected) {
+                    DeviceStatus deviceStatus = connection
                             .pollDeviceStatus(Integer.parseInt(thing.getProperties().get("deviceID")));
                     if (deviceStatus != null) {
                         for (Channel channel : handler.getChannels()) {

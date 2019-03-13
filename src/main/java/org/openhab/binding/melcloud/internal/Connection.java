@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.melcloud.internal.handler;
+package org.openhab.binding.melcloud.internal;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -22,10 +22,9 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.io.net.http.HttpUtil;
-import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
-import org.openhab.binding.melcloud.json.DeviceStatus;
-import org.openhab.binding.melcloud.json.ListDevicesResponse;
-import org.openhab.binding.melcloud.json.LoginClientResponse;
+import org.openhab.binding.melcloud.internal.json.DeviceStatus;
+import org.openhab.binding.melcloud.internal.json.ListDevicesResponse;
+import org.openhab.binding.melcloud.internal.json.LoginClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,14 +32,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
- * The {@link ConnectionHandler} Manage connection to Mitsubishi Cloud (MelCloud).
+ * The {@link Connection} Manage connection to Mitsubishi Cloud (MelCloud).
  *
  * @author Luca Calcaterra - Initial Contribution
  */
 @NonNullByDefault
-public class ConnectionHandler {
+public class Connection {
 
-    private final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(Connection.class);
 
     private final Configuration config;
     public boolean isConnected = false;
@@ -56,7 +55,7 @@ public class ConnectionHandler {
         return loginClientRes;
     }
 
-    public ConnectionHandler(Configuration config) {
+    public Connection(Configuration config) {
         this.config = config;
     }
 
@@ -82,7 +81,7 @@ public class ConnectionHandler {
                         null, stream, "application/json", 20000);
                 logger.debug("loginPage=" + loginResponse);
                 Gson gson = new Gson();
-                ConnectionHandler.loginClientRes = gson.fromJson(loginResponse, LoginClientResponse.class);
+                Connection.loginClientRes = gson.fromJson(loginResponse, LoginClientResponse.class);
                 this.isConnected = true;
                 logger.debug("LoginClientRes assigned");
                 return true;

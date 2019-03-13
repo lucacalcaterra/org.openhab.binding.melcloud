@@ -21,9 +21,9 @@ Import-Package:
  org.eclipse.smarthome.core.thing.binding,
  org.eclipse.smarthome.core.types,
  org.eclipse.smarthome.io.net.http,
- org.openhab.binding.melcloud.json,
+ org.openhab.binding.melcloud.internal.json,
  org.osgi.framework,
  org.slf4j
 Service-Component: OSGI-INF/*.xml
-Export-Package: org.openhab.binding.melcloud.json
+Export-Package: org.openhab.binding.melcloud.internal.json
 

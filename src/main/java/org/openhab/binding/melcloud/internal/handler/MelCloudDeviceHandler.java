@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.melcloud.internal;
+package org.openhab.binding.melcloud.internal.handler;
 
 import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 
@@ -19,7 +19,6 @@ import java.util.List;
 
 import javax.measure.quantity.Temperature;
 
-import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.OnOffType;
@@ -35,8 +34,8 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
-import org.openhab.binding.melcloud.internal.handler.ConnectionHandler;
-import org.openhab.binding.melcloud.json.DeviceStatus;
+import org.openhab.binding.melcloud.internal.Connection;
+import org.openhab.binding.melcloud.internal.json.DeviceStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,7 @@ import org.slf4j.LoggerFactory;
 public class MelCloudDeviceHandler extends BaseThingHandler {
 
     private final Logger logger = LoggerFactory.getLogger(MelCloudDeviceHandler.class);
-    @Nullable
+    // @Nullable
     // private MelCloudConfiguration config;
     private MelCloudBridgeHandler bridgeHandler;
     private DeviceStatus deviceStatus = new DeviceStatus();
@@ -118,9 +117,9 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
             MelCloudBridgeHandler bridgeHandler = this.bridgeHandler;
             if (bridgeHandler != null) {
-                ConnectionHandler connectionHandler = bridgeHandler.getConnectionHandler();
-                if (connectionHandler != null) {
-                    connectionHandler.sendCommand(cmdtoSend);
+                Connection connection = bridgeHandler.getConnectionHandler();
+                if (connection != null) {
+                    connection.sendCommand(cmdtoSend);
                     for (Channel channel : getChannels()) {
                         updateChannels(channel.getUID().getId(), this.deviceStatus);
                     }

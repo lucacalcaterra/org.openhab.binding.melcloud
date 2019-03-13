@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.melcloud.json;
+package org.openhab.binding.melcloud.internal.json;
 
 import java.security.Permissions;
 import java.util.List;
