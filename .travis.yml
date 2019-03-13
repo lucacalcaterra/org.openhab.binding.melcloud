@@ -6,4 +6,5 @@ before_install:
   - mkdir openhab2-addons-master/addons/binding/org.openhab.binding.melcloud
   - shopt -s extglob dotglob 
   - mv !(openhab2-addons-master) openhab2-addons-master/addons/binding/org.openhab.binding.melcloud
+  - cp openhab-addons-master/tools openhab-addons-master/addons
   - cd openhab2-addons-master/addons/binding/org.openhab.binding.melcloud
