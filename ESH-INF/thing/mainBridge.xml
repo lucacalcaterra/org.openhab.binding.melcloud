@@ -23,10 +23,10 @@
 				<default>0</default>
 			</parameter>
 			<parameter name="pollingInterval" type="integer" required="true">
-                <label>Polling Interval</label>
-                <description>Time interval before Bridge polling data from MelCloud</description>
-                <default>60</default>
-            </parameter>
+				<label>Polling Interval</label>
+				<description>Time interval before Bridge polling data from MelCloud</description>
+				<default>60</default>
+			</parameter>
 			<parameter name="loginAppVersion" type="text" required="true">
 				<label>App Version (of WebClient)-</label>
 				<description>Not Change it</description>
