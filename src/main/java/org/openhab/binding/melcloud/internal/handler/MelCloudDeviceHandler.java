@@ -14,6 +14,10 @@ package org.openhab.binding.melcloud.internal.handler;
 
 import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -151,6 +155,9 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
     public void updateChannels(String channelId, DeviceStatus deviceStatus) {
         this.deviceStatus = deviceStatus;
+        ZoneId zoneid = ZoneId.systemDefault();
+
+        ZoneOffset offset = new DateTimeType().getZonedDateTime().getOffset();
         switch (channelId) {
             case CHANNEL_POWER:
                 updateState(CHANNEL_POWER, deviceStatus.getPower() ? OnOffType.ON : OnOffType.OFF);
@@ -183,12 +190,15 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 updateState(CHANNEL_ROOM_TEMPERATURE, new DecimalType(deviceStatus.getRoomTemperature()));
                 break;
             case CHANNEL_LAST_COMMUNICATION:
-                updateState(CHANNEL_LAST_COMMUNICATION,
-                        new DateTimeType(deviceStatus.getLastCommunication().split("[.]")[0]));
+                LocalDateTime ldtlc = LocalDateTime.parse(deviceStatus.getLastCommunication().split("[.]")[0]);
+                ZonedDateTime zdtlc = ZonedDateTime.of(ldtlc, zoneid);
+                updateState(CHANNEL_LAST_COMMUNICATION, new DateTimeType(zdtlc));
+
                 break;
             case CHANNEL_NEXT_COMMUNICATION:
-                updateState(CHANNEL_NEXT_COMMUNICATION,
-                        new DateTimeType(deviceStatus.getNextCommunication().split("[.]")[0]));
+                LocalDateTime ldtnc = LocalDateTime.parse(deviceStatus.getNextCommunication().split("[.]")[0]);
+                ZonedDateTime zdtnc = ZonedDateTime.of(ldtnc, zoneid);
+                updateState(CHANNEL_NEXT_COMMUNICATION, new DateTimeType(zdtnc));
                 break;
         }
     }
