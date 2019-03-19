@@ -190,14 +190,16 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 updateState(CHANNEL_ROOM_TEMPERATURE, new DecimalType(deviceStatus.getRoomTemperature()));
                 break;
             case CHANNEL_LAST_COMMUNICATION:
-                LocalDateTime ldtlc = LocalDateTime.parse(deviceStatus.getLastCommunication().split("[.]")[0]);
-                ZonedDateTime zdtlc = ZonedDateTime.of(ldtlc, zoneid);
+                ZonedDateTime zdtlc = ZonedDateTime.ofInstant(
+                        LocalDateTime.parse(deviceStatus.getLastCommunication(), DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                        ZoneOffset.UTC, ZoneId.systemDefault());
                 updateState(CHANNEL_LAST_COMMUNICATION, new DateTimeType(zdtlc));
 
                 break;
             case CHANNEL_NEXT_COMMUNICATION:
-                LocalDateTime ldtnc = LocalDateTime.parse(deviceStatus.getNextCommunication().split("[.]")[0]);
-                ZonedDateTime zdtnc = ZonedDateTime.of(ldtnc, zoneid);
+                ZonedDateTime zdtnc = ZonedDateTime.ofInstant(
+                        LocalDateTime.parse(deviceStatus.getNextCommunication(), DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                        ZoneOffset.UTC, ZoneId.systemDefault());
                 updateState(CHANNEL_NEXT_COMMUNICATION, new DateTimeType(zdtnc));
                 break;
         }
