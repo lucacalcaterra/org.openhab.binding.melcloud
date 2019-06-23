@@ -1,8 +1,7 @@
 # MELCloud Binding
 
 This is an openHAB binding for Mitsubishi MELCloud (https://www.melcloud.com/). 
-Installing this binding you can control your Mitsubishi devices from openHAB without accessing the MELCloud App 
-and benefiting from all openHAB automations.
+Installing this binding you can control your Mitsubishi devices from openHAB without accessing the MELCloud App and benefiting from all openHAB automations.
 
 ## Supported Things
 
@@ -27,7 +26,8 @@ Binding support also manual thing configuration by thing files.
 
 ## Thing Configuration
 
-In order to manually create a thing file and not use the discovery routine you will need to know device serial number. This is a bit difficult to get. The easiest way of getting this is enable debug level logging or discovery devices by the binding (discovered device can be removed afterwards).
+In order to manually create a thing file and not use the discovery routine you will need to know device serial number.
+This is a bit difficult to get. The easiest way of getting this is enable debug level logging or discovery devices by the binding (discovered device can be removed afterwards).
 
 MELCloud account configuration:
 

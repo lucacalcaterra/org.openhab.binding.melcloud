@@ -21,33 +21,33 @@
 				<label>Language</label>
 				<description>Language</description>
 				<options>
-                    <option value="0">English</option>
-                    <option value="1">Bulgarian</option>
-                    <option value="2">Czech</option>
-                    <option value="3">Danish</option>
-                    <option value="4">German</option>
-                    <option value="5">Estonian</option>
-                    <option value="6">Spanish</option>
-                    <option value="7">French</option>
-                    <option value="8">Armenian</option>
-                    <option value="9">Latvian</option>
-                    <option value="10">Lithuanian</option>
-                    <option value="11">Hungarian</option>
-                    <option value="12">Dutch</option>
-                    <option value="13">Norwegian</option>
-                    <option value="14">Polish</option>
-                    <option value="15">Portuguese</option>
-                    <option value="16">Russian</option>
-                    <option value="17">Finnish</option>
-                    <option value="18">Swedish</option>
-                    <option value="19">Italian</option>
-                    <option value="20">Ukrainian</option>
-                    <option value="21">Turkish</option>
-                    <option value="22">Greek</option>
-                    <option value="23">Croatian</option>
-                    <option value="24">Romanian</option>
-                    <option value="25">Slovenian</option>
-                </options>
+					<option value="0">English</option>
+					<option value="1">Bulgarian</option>
+					<option value="2">Czech</option>
+					<option value="3">Danish</option>
+					<option value="4">German</option>
+					<option value="5">Estonian</option>
+					<option value="6">Spanish</option>
+					<option value="7">French</option>
+					<option value="8">Armenian</option>
+					<option value="9">Latvian</option>
+					<option value="10">Lithuanian</option>
+					<option value="11">Hungarian</option>
+					<option value="12">Dutch</option>
+					<option value="13">Norwegian</option>
+					<option value="14">Polish</option>
+					<option value="15">Portuguese</option>
+					<option value="16">Russian</option>
+					<option value="17">Finnish</option>
+					<option value="18">Swedish</option>
+					<option value="19">Italian</option>
+					<option value="20">Ukrainian</option>
+					<option value="21">Turkish</option>
+					<option value="22">Greek</option>
+					<option value="23">Croatian</option>
+					<option value="24">Romanian</option>
+					<option value="25">Slovenian</option>
+				</options>
 				<default>0</default>
 			</parameter>
 		</config-description>
