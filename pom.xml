@@ -12,6 +12,6 @@
   <artifactId>org.openhab.binding.melcloud</artifactId>
   <packaging>eclipse-plugin</packaging>
 
-  <name>MelCloud Binding</name>
+  <name>MELCloud Binding</name>
 
 </project>

@@ -14,8 +14,9 @@ package org.openhab.binding.melcloud.internal;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 
 /**
@@ -24,23 +25,12 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
  *
  * @author LucaCalcaterra - Initial contribution
  */
-@NonNullByDefault
 public class MelCloudBindingConstants {
 
     private static final String BINDING_ID = "melcloud";
 
-    public static final String POLLING_INTERVAL = "pollingInterval";
-    // List of all Main Bridge properties
-    public static final String LOGIN_USERNAME = "username";
-    public static final String LOGIN_PASS = "webpass";
-
-    // Url's
-    public static final String WEBUIURL = "webUIUrl";
-    public static final String LOGIN_URL = "loginUrl";
-    public static final String LOGIN_LANG = "loginLanguageId";
-    public static final String LOGIN_APPVERSION = "loginAppVersion";
     // List of Bridge Type UIDs
-    public static final ThingTypeUID LOGIN_BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "melCloudServerBridge");
+    public static final ThingTypeUID THING_TYPE_MELCLOUD_ACCOUNT = new ThingTypeUID(BINDING_ID, "melCloudAccount");
 
     // List of all Thing Type UIDs
     public static final ThingTypeUID THING_TYPE_ACDEVICE = new ThingTypeUID(BINDING_ID, "acDevice");
@@ -49,9 +39,10 @@ public class MelCloudBindingConstants {
     public static final String CHANNEL_POWER = "power";
     public static final String CHANNEL_OPERATION_MODE = "operationMode";
     public static final String CHANNEL_SET_TEMPERATURE = "setTemperature";
-    public static final String CHANNEL_SET_FAN_SPEED = "setFanSpeed";
+    public static final String CHANNEL_FAN_SPEED = "fanSpeed";
     public static final String CHANNEL_VANE_HORIZONTAL = "vaneHorizontal";
     public static final String CHANNEL_VANE_VERTICAL = "vaneVertical";
+
     // Read Only Channels
     public static final String CHANNEL_ROOM_TEMPERATURE = "roomTemperature";
     public static final String CHANNEL_LAST_COMMUNICATION = "lastCommunication";
@@ -59,6 +50,8 @@ public class MelCloudBindingConstants {
     public static final String CHANNEL_HAS_PENDING_COMMAND = "hasPendingCommand";
     public static final String CHANNEL_OFFLINE = "offline";
 
-    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_ACDEVICE);
-    public static final Set<ThingTypeUID> BRIDGE_THING_TYPES_UIDS = Collections.singleton(LOGIN_BRIDGE_THING_TYPE);
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPE_UIDS = Collections
+            .unmodifiableSet(Stream.of(THING_TYPE_MELCLOUD_ACCOUNT, THING_TYPE_ACDEVICE).collect(Collectors.toSet()));
+
+    public static final Set<ThingTypeUID> DISCOVERABLE_THING_TYPE_UIDS = Collections.singleton(THING_TYPE_ACDEVICE);
 }

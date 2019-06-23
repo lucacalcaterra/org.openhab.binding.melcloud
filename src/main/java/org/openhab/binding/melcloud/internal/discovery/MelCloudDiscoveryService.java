@@ -12,20 +12,21 @@
  */
 package org.openhab.binding.melcloud.internal.discovery;
 
-import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.*;
+import static org.openhab.binding.melcloud.internal.MelCloudBindingConstants.THING_TYPE_ACDEVICE;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.thing.ThingUID;
-import org.openhab.binding.melcloud.internal.handler.MelCloudBridgeHandler;
-import org.openhab.binding.melcloud.internal.json.Device;
+import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
+import org.openhab.binding.melcloud.internal.api.json.Device;
+import org.openhab.binding.melcloud.internal.handler.MelCloudAccountHandler;
 import org.osgi.service.component.annotations.Modified;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,93 +35,87 @@ import org.slf4j.LoggerFactory;
  * The {@link MelCloudDiscoveryService} creates things based on the configured location.
  *
  * @author Luca Calcaterra - Initial Contribution
+ * @author Pauli Anttila - Refactoring
  */
-@NonNullByDefault
 public class MelCloudDiscoveryService extends AbstractDiscoveryService {
     private final Logger logger = LoggerFactory.getLogger(MelCloudDiscoveryService.class);
 
     private static final int DISCOVER_TIMEOUT_SECONDS = 10;
 
-    private final MelCloudBridgeHandler bridgeHandler;
-    private @Nullable ScheduledFuture<?> discoveryJob;
+    private final MelCloudAccountHandler melCloudHandler;
+    private ScheduledFuture<?> scanTask;
 
     /**
      * Creates a MelCloudDiscoveryService with enabled autostart.
      */
-    public MelCloudDiscoveryService(MelCloudBridgeHandler bridgeHandler) {
-        super(SUPPORTED_THING_TYPES_UIDS, DISCOVER_TIMEOUT_SECONDS, true);
-        this.bridgeHandler = bridgeHandler;
+    public MelCloudDiscoveryService(MelCloudAccountHandler melCloudHandler) {
+        super(MelCloudBindingConstants.DISCOVERABLE_THING_TYPE_UIDS, DISCOVER_TIMEOUT_SECONDS, true);
+        this.melCloudHandler = melCloudHandler;
     }
 
     @Override
-    protected void activate(@Nullable Map<String, @Nullable Object> configProperties) {
+    protected void activate(Map<String, @Nullable Object> configProperties) {
         super.activate(configProperties);
     }
 
     @Override
     @Modified
-    protected void modified(@Nullable Map<String, @Nullable Object> configProperties) {
+    protected void modified(Map<String, @Nullable Object> configProperties) {
         super.modified(configProperties);
     }
 
     @Override
-    protected void startScan() {
-        logger.debug("Starting MelCloud discovery scan");
-        createResults();
+    protected void startBackgroundDiscovery() {
+        discoverDevices();
     }
 
     @Override
-    protected void startBackgroundDiscovery() {
-        // Not implemented and probably never will...
+    protected void startScan() {
+        if (this.scanTask != null) {
+            scanTask.cancel(true);
+        }
+        this.scanTask = scheduler.schedule(() -> discoverDevices(), 0, TimeUnit.SECONDS);
     }
 
-    private void createResults() {
-        logger.debug("createResults()");
-        ThingUID bridgeUID = bridgeHandler.getThing().getUID();
-        if (bridgeHandler.getThing().getThingTypeUID().equals(LOGIN_BRIDGE_THING_TYPE)) {
-            logger.debug("bridge type");
-            // get device list
-            List<Device> deviceList = bridgeHandler.getdeviceList();
+    @Override
+    protected void stopScan() {
+        super.stopScan();
+
+        if (this.scanTask != null) {
+            this.scanTask.cancel(true);
+            this.scanTask = null;
+        }
+    }
+
+    private void discoverDevices() {
+        logger.debug("Discover devices)");
+
+        if (melCloudHandler != null) {
+            List<Device> deviceList = melCloudHandler.getDeviceList();
 
             if (deviceList == null) {
-                logger.debug("device list array null");
-            }
+                logger.debug("No devices found");
+            } else {
+                ThingUID bridgeUID = melCloudHandler.getThing().getUID();
 
-            else {
                 deviceList.forEach(device -> {
+                    ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, melCloudHandler.getThing().getUID(),
+                            device.getDeviceID().toString());
 
-                    ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, bridgeHandler.getThing().getUID(),
-                            "Device-" + device.getDeviceID());
-                    logger.debug("new thing ACDEVICE inside foreach deviceList");
                     Map<String, Object> deviceProperties = new HashMap<>();
                     deviceProperties.put("deviceID", device.getDeviceID().toString());
                     deviceProperties.put("serialNumber", device.getSerialNumber().toString());
                     deviceProperties.put("macAddress", device.getMacAddress().toString());
                     deviceProperties.put("deviceName", device.getDeviceName().toString());
+                    deviceProperties.put("buildingID", device.getBuildingID().toString());
+
+                    logger.debug("Adding new device: {}", deviceProperties);
 
                     thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(device.getDeviceName())
                             .withProperties(deviceProperties)
                             .withRepresentationProperty(device.getDeviceID().toString()).withBridge(bridgeUID).build());
-
-                    logger.debug("return Things belongs to MelCloud Bridge");
-                }
-
-                );
-                logger.debug("finish list of devices");
+                });
             }
         }
     }
-
-    @Override
-    protected void stopBackgroundDiscovery() {
-        logger.debug("Stopping MelCloud background discovery");
-        ScheduledFuture<?> discoveryJob = this.discoveryJob;
-        if (discoveryJob != null && !discoveryJob.isCancelled()) {
-            if (discoveryJob.cancel(true)) {
-                discoveryJob = null;
-                logger.debug("Stopped MelCloud background discovery");
-            }
-        }
-    }
-
 }

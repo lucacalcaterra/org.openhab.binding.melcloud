@@ -1,73 +1,123 @@
-# MelCloud Binding
+# MELCloud Binding
 
-This is an Openhab 2 binding for Mitsubishi MelCloud (https://www.melcloud.com/). 
-Installing this binding you can control your Mitsubishi devices from Openhab without accessing the Melcloud App 
-and benefiting from all openhab automations.
-
-Project and Doc is work in progress, so i'm searching for people that help me with code and, in case, update Documentation.
+This is an openHAB binding for Mitsubishi MELCloud (https://www.melcloud.com/). 
+Installing this binding you can control your Mitsubishi devices from openHAB without accessing the MELCloud App 
+and benefiting from all openHAB automations.
 
 ## Supported Things
 
-Supports mitsubishi air conditioners (tested with a couple of models I own like Kirigamine) automatically identified by Discovery after configuring the bridge that accesses the cloud.
+Supported thing types
+
+* melcloudaccount (bridge)
+* acdevice
+
+A bridge is required to connect to your MELCloud account.
+
 
 ## Discovery
 
-Discovery automatically identify your devices on melcloud adn return them as Things.
+Discovery is used _after_ a bridge has been created and configured with your login information.
 
-## Binding Configuration
+1. Add the binding
+2. Add a new thing of type melcloudaccount and configure with username and password
+3. Go to Inbox and start discovery of A.C. devices using MELCloud Binding
+4. A.C. devices should appear in your inbox
 
-Nothing special for those who know Openhab.
-Simply add MelCloud Bridge from PaperUI filling username and password  and then discovery do the rest.
-Leave others parameters as they are; you can change the lang id (Default 0 for English) with you Language (
-necessary to ensure that the dates are in the format to your area):
-
-0   =   en  English
-1   =   bg  Български
-2   =   cs  Čeština
-3   =   da  Dansk
-4   =   de  Deutsch
-5   =   et  Eesti
-6   =   es  Español
-7   =   fr  Français
-8   =   hy  Հայերեն
-9   =   lv  Latviešu
-10  =   lt  Lietuvių
-11  =   hu  Magyar
-12  =   nl  Nederlands
-13  =   no  Norwegian
-14  =   pl  Polski
-15  =   pt  Português
-16  =   ru  Русский
-17  =   fi  Suomi
-18  =   sv  Svenska
-19  =   it  Italiano
-20  =   uk  Українська
-21  =   tr  Türkçe
-22  =   el  Ελληνικά
-23  =   hr  Hrvatski
-24  =   ro  Română
-25  =   sl  Slovenščina
-
-(thanks to il @Cato for this list) https://github.com/ilcato/homebridge-melcloud)
+Binding support also manual thing configuration by thing files.
 
 ## Thing Configuration
 
-No Thing Configuration for now.
+In order to manually create a thing file and not use the discovery routine you will need to know device serial number. This is a bit difficult to get. The easiest way of getting this is enable debug level logging or discovery devices by the binding (discovered device can be removed afterwards).
+
+MELCloud account configuration:
+
+| Config   | Mandatory | Description                             |
+|----------|-----------|-----------------------------------------|
+| username | x         | Email address tied to MELCloud account. |
+| password | x         | Password to MELCloud account.           |
+| language |           | Language ID, see table below.           |
+
+| LanguageId  | Language          |
+|-------------|-------------------|
+| 0           | English (default) |
+| 1           | Bulgarian         |
+| 2           | Czech             |
+| 3           | Danish            |
+| 4           | German            |
+| 5           | Estonian          |
+| 6           | Spanish           |
+| 7           | French            |
+| 8           | Armenian          |
+| 9           | Latvian           |
+| 10          | Lithuanian        |
+| 11          | Hungarian         |
+| 12          | Dutch             |
+| 13          | Norwegian         |
+| 14          | Polish            |
+| 15          | Portuguese        |
+| 16          | Russian           |
+| 17          | Finnish           |
+| 18          | Swedish           |
+| 19          | Italian           |
+| 20          | Ukrainian         |
+| 21          | Turkish           |
+| 22          | Greek             |
+| 23          | Croatian          |
+| 24          | Romanian          |
+| 25          | Slovenian         |
+
+
+A.C. device configuration:
+
+| Config          | Mandatory | Description                                                                           |
+|-----------------|-----------|---------------------------------------------------------------------------------------|
+| deviceID        | x         | MELCloud device ID.                                                                   |
+| buildingID      |           | MELCloud building ID. If not defined, binding tries to find matching id by deivce ID. |
+| pollingInterval |           | Refresh time interval in seconds for updates from MELCloud.  Defaults to 60 seconds.  |
+
+
 
 ## Channels
 
-TODO: Add Doc for Thing's (A.C. Device) Channels
+A.C. device channels
+
+| Channel             | Type     | Description                                                                | Read Only |
+|---------------------|----------|----------------------------------------------------------------------------|-----------|
+| power               | Switch   | Power Status of Device.                                                    | False     |
+| operationMode       | Number   | Operation mode: 1 = Heat, 2 = Dry, 3 = Cool, 7 = Fan, 8 = Auto.            | False     |
+| setTemperature      | Number   | Set Temperature: Min = 10, Max = 40.                                       | False     |
+| fanSpeed            | Number   | Fan speed: 0 = Auto, 1 = 1, 2 = 2, 3 = 3, 4 = 4, 5 = 5.                    | False     |
+| vaneHorizontal      | Number   | Vane Horizontal: 0 = Auto, 1 = 1, 2 = 2, 3 = 3, 4 = 4, 5 = 5, 12 = Swing.  | False     |
+| vaneVertical        | Number   | Vane Vertical: 0 = Auto, 1 = 1, 2 = 2, 3 = 3, 4 = 4, 5 = 5, 7 = Swing.     | False     |
+| roomTemperature     | Number   | Room temperature.                                                          | True      |
+| lastCommunication   | DateTime | Last Communication times when MELCloud communicated to the device.         | True      |
+| nextCommunication   | DateTime | Next communication time when MELCloud will communicate too the device.     | True      |
+| offline             | Switch   | Is device in offline state.                                                | True      |
+| hasPendingCommand   | Switch   | Device has a pending command(s).                                           | True      |
+
 
 ## Full Example for items configuration
 
-TODO: Add Doc for manually configuring items .
+**melcloud.things**
 
-## Issues
+```
+Bridge melcloud:melcloudaccount:myaccount "My MELCloud account" [ username="user.name@email.com", password="xxxxxx", language="0" ] {
+    Thing acdevice livingroom "Livingroom A.C. device" [ deviceID=123456, pollingInterval=60 ]
+}
+```
 
-I am not a great java expert and since the binding is in beta testing we accept advice, reporting problems, or even better collaborations with experienced developers.
+**melcloud.items**
 
-Author: Luca Calcaterra .
-
-# NOTICE
-
-This is not an official binding, and the author has no connection with Mitsubishi, nor has the company provided any information. The author made it only out of necessity and passion.
+```
+Switch      power               { channel="melcloud:acdevice:myaccount:livingroom:power" }
+Number      operationMode       { channel="melcloud:acdevice:myaccount:livingroom:operationMode" }
+Number      setTemperature      { channel="melcloud:acdevice:myaccount:livingroom:setTemperature" }
+Number      fanSpeed            { channel="melcloud:acdevice:myaccount:livingroom:fanSpeed" }
+Number      vaneHorizontal      { channel="melcloud:acdevice:myaccount:livingroom:vaneHorizontal" }
+Number      vaneVertical        { channel="melcloud:acdevice:myaccount:livingroom:vaneVertical" }
+Number      roomTemperature     { channel="melcloud:acdevice:myaccount:livingroom:roomTemperature" }
+DateTime    lastCommunication   { channel="melcloud:acdevice:myaccount:livingroom:lastCommunication" }
+DateTime    nextCommunication   { channel="melcloud:acdevice:myaccount:livingroom:nextCommunication" }
+Switch      offline             { channel="melcloud:acdevice:myaccount:livingroom:offline" }
+Switch      hasPendingCommand   { channel="melcloud:acdevice:myaccount:livingroom:hasPendingCommand" }
+```

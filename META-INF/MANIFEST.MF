@@ -3,7 +3,7 @@ Automatic-Module-Name: org.openhab.binding.melcloud
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-ManifestVersion: 2
-Bundle-Name: MelCloud Binding
+Bundle-Name: MELCloud Binding
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-SymbolicName: org.openhab.binding.melcloud;singleton:=true
 Bundle-Vendor: openHAB
@@ -24,5 +24,3 @@ Import-Package:
  org.osgi.framework,
  org.slf4j
 Service-Component: OSGI-INF/*.xml
-
-

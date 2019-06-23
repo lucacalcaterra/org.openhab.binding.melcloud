@@ -10,13 +10,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.melcloud.internal.json;
+package org.openhab.binding.melcloud.internal.api.json;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@link Structure} is responsible of JSON data For MelCloud API
+ * The {@link Structure} is responsible of JSON data For MELCloud API
  * WeatherObservation Data
  * Generated with jsonschema2pojo
  *
