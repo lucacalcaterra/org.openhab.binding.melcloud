@@ -30,10 +30,10 @@ public class MelCloudBindingConstants {
     private static final String BINDING_ID = "melcloud";
 
     // List of Bridge Type UIDs
-    public static final ThingTypeUID THING_TYPE_MELCLOUD_ACCOUNT = new ThingTypeUID(BINDING_ID, "melCloudAccount");
+    public static final ThingTypeUID THING_TYPE_MELCLOUD_ACCOUNT = new ThingTypeUID(BINDING_ID, "melcloudaccount");
 
     // List of all Thing Type UIDs
-    public static final ThingTypeUID THING_TYPE_ACDEVICE = new ThingTypeUID(BINDING_ID, "acDevice");
+    public static final ThingTypeUID THING_TYPE_ACDEVICE = new ThingTypeUID(BINDING_ID, "acdevice");
 
     // List of all Channel ids
     public static final String CHANNEL_POWER = "power";
