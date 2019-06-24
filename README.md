@@ -26,8 +26,8 @@ Binding support also manual thing configuration by thing files.
 
 ## Thing Configuration
 
-In order to manually create a thing file and not use the discovery routine you will need to know device serial number.
-This is a bit difficult to get. The easiest way of getting this is enable debug level logging or discovery devices by the binding (discovered device can be removed afterwards).
+In order to manually create a thing file and not use the discovery routine you will need to know device MELCloud device ID.
+This is a bit difficult to get. The easiest way of getting this is enable debug level logging of the binding or discovery devices by the binding (discovered device can be removed afterwards).
 
 MELCloud account configuration:
 
