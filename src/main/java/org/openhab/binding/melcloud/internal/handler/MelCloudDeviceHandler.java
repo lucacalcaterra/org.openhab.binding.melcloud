@@ -188,7 +188,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
                 cmdtoSend.setDeviceID(config.deviceID);
                 if (melCloudHandler != null) {
                     try {
-                        deviceStatus = melCloudHandler.sendCommand(cmdtoSend);
+                        deviceStatus = melCloudHandler.sendDeviceStatus(cmdtoSend);
                         updateChannels(deviceStatus);
                     } catch (MelCloudCommException e) {
                         logger.warn("Command '{}' to channel '{}' failed, reason {}. ", command, channelUID,
@@ -212,7 +212,8 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
         if (melCloudHandler.isConnected()) {
             logger.debug("Update device '{}' channels", getThing().getThingTypeUID());
             try {
-                deviceStatus = melCloudHandler.getDeviceStatus(config.deviceID, Optional.ofNullable(config.buildingID));
+                deviceStatus = melCloudHandler.fetchDeviceStatus(config.deviceID,
+                        Optional.ofNullable(config.buildingID));
                 updateChannels(deviceStatus);
             } catch (MelCloudCommException e) {
                 logger.debug("Error occurred during device '{}' polling, reason {}. ", getThing().getThingTypeUID(),

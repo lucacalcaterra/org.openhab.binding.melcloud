@@ -56,7 +56,7 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
 
     @Override
     public void initialize() {
-        logger.debug("Initializing MELCloud bridge handler.");
+        logger.debug("Initializing MELCloud account handler.");
         config = getThing().getConfiguration().as(AccountConfig.class);
         connection = new MelCloudConnection();
         devices = Collections.emptyList();
@@ -93,7 +93,7 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
         boolean loginError = false;
         try {
             connection.login(config.username, config.password, config.language);
-            ListDevicesResponse response = connection.pollDeviceList();
+            ListDevicesResponse response = connection.fetchDeviceList();
             if (response != null) {
                 devices = response.getStructure().getDevices();
             } else {
@@ -116,9 +116,9 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
         return connection.isConnected();
     }
 
-    public DeviceStatus getDeviceStatus(int deviceId, Optional<Integer> buildingId) throws MelCloudCommException {
+    public DeviceStatus fetchDeviceStatus(int deviceId, Optional<Integer> buildingId) throws MelCloudCommException {
         int bid = buildingId.orElse(findBuildingId(deviceId));
-        return connection.pollDeviceStatus(deviceId, bid);
+        return connection.fetchDeviceStatus(deviceId, bid);
     }
 
     private int findBuildingId(int deviceId) throws MelCloudCommException {
@@ -131,8 +131,8 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
         throw new MelCloudCommException(String.format("Can't find building id for device id %s", deviceId));
     }
 
-    public DeviceStatus sendCommand(DeviceStatus deviceStatusToSend) throws MelCloudCommException {
-        return connection.sendCommand(deviceStatusToSend);
+    public DeviceStatus sendDeviceStatus(DeviceStatus deviceStatus) throws MelCloudCommException {
+        return connection.sendDeviceStatus(deviceStatus);
     }
 
     private void startConnectionCheck() {

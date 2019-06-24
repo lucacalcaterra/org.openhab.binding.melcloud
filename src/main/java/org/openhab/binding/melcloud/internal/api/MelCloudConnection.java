@@ -87,7 +87,7 @@ public class MelCloudConnection {
         }
     }
 
-    public ListDevicesResponse pollDeviceList() throws MelCloudCommException {
+    public ListDevicesResponse fetchDeviceList() throws MelCloudCommException {
         if (isConnected()) {
             try {
                 String response = HttpUtil.executeUrl("GET", DEVICE_LIST_URL, getHeaderProperties(), null, null,
@@ -104,9 +104,9 @@ public class MelCloudConnection {
         throw new MelCloudCommException("Not connected to MELCloud");
     }
 
-    public DeviceStatus pollDeviceStatus(int deviceId, int buildingId) throws MelCloudCommException {
+    public DeviceStatus fetchDeviceStatus(int deviceId, int buildingId) throws MelCloudCommException {
         if (isConnected()) {
-            String url = String.format(DEVICE_URL + "/Get?id=%d&buildingID=%d", deviceId, buildingId);
+            String url = DEVICE_URL + String.format("/Get?id=%d&buildingID=%d", deviceId, buildingId);
             try {
                 String response = HttpUtil.executeUrl("GET", url, getHeaderProperties(), null, null, TIMEOUT);
                 logger.debug("Device status response: {}", response);
@@ -122,17 +122,15 @@ public class MelCloudConnection {
         throw new MelCloudCommException("Not connected to MELCloud");
     }
 
-    public DeviceStatus sendCommand(DeviceStatus deviceStatusToSend) throws MelCloudCommException {
+    public DeviceStatus sendDeviceStatus(DeviceStatus deviceStatus) throws MelCloudCommException {
         if (isConnected()) {
-            deviceStatusToSend.setHasPendingCommand(true);
-            String content = gson.toJson(deviceStatusToSend, DeviceStatus.class);
+            String content = gson.toJson(deviceStatus, DeviceStatus.class);
             InputStream data = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             try {
                 String response = HttpUtil.executeUrl("POST", DEVICE_URL + "/SetAta", getHeaderProperties(), data,
                         "application/json", TIMEOUT);
                 logger.debug("Command response: {}", response);
-                DeviceStatus deviceStatus = gson.fromJson(response, DeviceStatus.class);
-                return deviceStatus;
+                return gson.fromJson(response, DeviceStatus.class);
             } catch (IOException e) {
                 setConnected(false);
                 throw new MelCloudCommException("Error occured during device command sending", e);
