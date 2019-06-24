@@ -125,11 +125,12 @@ public class MelCloudConnection {
     public DeviceStatus sendDeviceStatus(DeviceStatus deviceStatus) throws MelCloudCommException {
         if (isConnected()) {
             String content = gson.toJson(deviceStatus, DeviceStatus.class);
+            logger.debug("Sending device status: {}", content);
             InputStream data = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             try {
                 String response = HttpUtil.executeUrl("POST", DEVICE_URL + "/SetAta", getHeaderProperties(), data,
                         "application/json", TIMEOUT);
-                logger.debug("Command response: {}", response);
+                logger.debug("Device status sending response: {}", response);
                 return gson.fromJson(response, DeviceStatus.class);
             } catch (IOException e) {
                 setConnected(false);
