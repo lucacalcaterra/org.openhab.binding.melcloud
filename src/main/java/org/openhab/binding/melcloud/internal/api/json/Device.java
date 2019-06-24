@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.melcloud.internal.json;
+package org.openhab.binding.melcloud.internal.api.json;
 
 import java.security.Permissions;
 import java.util.List;
@@ -19,10 +19,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@link Device} is responsible of JSON data For MelCloud API
+ * The {@link Device} is responsible of JSON data For MELCloud API
  * Device Structure.
  * Generated with jsonschema2pojo
- * 
+ *
  * @author LucaCalcaterra - Initial contribution
  */
 
