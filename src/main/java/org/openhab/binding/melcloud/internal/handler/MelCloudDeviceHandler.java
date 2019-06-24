@@ -185,6 +185,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
             if (effectiveFlag > 0) {
                 cmdtoSend.setEffectiveFlags(effectiveFlag);
+                cmdtoSend.setHasPendingCommand(true);
                 cmdtoSend.setDeviceID(config.deviceID);
                 if (melCloudHandler != null) {
                     try {
