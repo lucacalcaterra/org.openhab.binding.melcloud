@@ -109,13 +109,24 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
                     deviceProperties.put("deviceName", device.getDeviceName().toString());
                     deviceProperties.put("buildingID", device.getBuildingID().toString());
 
-                    logger.debug("Adding new device: {}", deviceProperties);
+                    String label = createLabel(device);
+                    logger.debug("Found device: {} : {}", label, deviceProperties);
 
-                    thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(device.getDeviceName())
+                    thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(label)
                             .withProperties(deviceProperties)
                             .withRepresentationProperty(device.getDeviceID().toString()).withBridge(bridgeUID).build());
                 });
             }
         }
+    }
+
+    private String createLabel(Device device) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("A.C. Device - ");
+        if (device.getBuildingName() != null && device.getBuildingName() instanceof String) {
+            sb.append(device.getBuildingName()).append(" - ");
+        }
+        sb.append(device.getDeviceName());
+        return sb.toString();
     }
 }
