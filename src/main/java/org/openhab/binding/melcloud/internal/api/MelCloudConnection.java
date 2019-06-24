@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
@@ -46,7 +47,7 @@ public class MelCloudConnection {
     private static final int TIMEOUT = 10000;
 
     // Gson objects are safe to share across threads and are somewhat expensive to construct. Use a single instance.
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     private final Logger logger = LoggerFactory.getLogger(MelCloudConnection.class);
 

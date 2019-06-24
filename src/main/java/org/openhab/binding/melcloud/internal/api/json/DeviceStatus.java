@@ -23,95 +23,124 @@ import com.google.gson.annotations.SerializedName;
  * Generated with jsonschema2pojo
  *
  * @author LucaCalcaterra - Initial contribution
+ * @author Pauli Anttila - Fine tuned expose annotations
  */
 public class DeviceStatus {
 
     @SerializedName("EffectiveFlags")
     @Expose
     private Integer effectiveFlags;
+
     @SerializedName("LocalIPAddress")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Object localIPAddress;
+
     @SerializedName("RoomTemperature")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Double roomTemperature;
+
     @SerializedName("SetTemperature")
     @Expose
     private Double setTemperature;
+
     @SerializedName("SetFanSpeed")
     @Expose
     private Integer setFanSpeed;
+
     @SerializedName("OperationMode")
     @Expose
     private Integer operationMode;
+
     @SerializedName("VaneHorizontal")
     @Expose
     private Integer vaneHorizontal;
+
     @SerializedName("VaneVertical")
     @Expose
     private Integer vaneVertical;
+
     @SerializedName("Name")
     @Expose
     private Object name;
+
     @SerializedName("NumberOfFanSpeeds")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Integer numberOfFanSpeeds;
+
     @SerializedName("WeatherObservations")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private List<WeatherObservation> weatherObservations = null;
+
     @SerializedName("ErrorMessage")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Object errorMessage;
+
     @SerializedName("ErrorCode")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Integer errorCode;
+
     @SerializedName("DefaultHeatingSetTemperature")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Double defaultHeatingSetTemperature;
+
     @SerializedName("DefaultCoolingSetTemperature")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Double defaultCoolingSetTemperature;
+
     @SerializedName("HideVaneControls")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Boolean hideVaneControls;
+
     @SerializedName("HideDryModeControl")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Boolean hideDryModeControl;
+
     @SerializedName("RoomTemperatureLabel")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Integer roomTemperatureLabel;
+
     @SerializedName("InStandbyMode")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Boolean inStandbyMode;
+
     @SerializedName("TemperatureIncrementOverride")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Integer temperatureIncrementOverride;
+
     @SerializedName("DeviceID")
     @Expose
     private Integer deviceID;
+
     @SerializedName("DeviceType")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Integer deviceType;
+
     @SerializedName("LastCommunication")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private String lastCommunication;
+
     @SerializedName("NextCommunication")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private String nextCommunication;
+
     @SerializedName("Power")
     @Expose
     private Boolean power;
+
     @SerializedName("HasPendingCommand")
     @Expose
     private Boolean hasPendingCommand;
+
     @SerializedName("Offline")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Boolean offline;
+
     @SerializedName("Scene")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Object scene;
+
     @SerializedName("SceneOwner")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     private Object sceneOwner;
 
     public Integer getEffectiveFlags() {
