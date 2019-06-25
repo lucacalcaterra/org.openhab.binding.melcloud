@@ -132,7 +132,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        logger.debug("Handled command {}", command);
+        logger.debug("Received command '{}' to channel {}", command, channelUID);
 
         if (command instanceof RefreshType) {
             logger.debug("Resfresh command not supported");
