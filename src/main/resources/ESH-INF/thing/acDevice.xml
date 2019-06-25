@@ -126,19 +126,19 @@
 	<channel-type id="lastCommunication-channel">
 		<item-type>DateTime</item-type>
 		<label>Last Communication</label>
-		<description>Last communication time</description>
+		<description>Last communication time between device and MELCloud</description>
 		<state readOnly="true" />
 	</channel-type>
 	<channel-type id="nextCommunication-channel">
 		<item-type>DateTime</item-type>
 		<label>Next Communication</label>
-		<description>Next communication time</description>
+		<description>Next communication time between device and MELCloud</description>
 		<state readOnly="true" />
 	</channel-type>
 	<channel-type id="offline-channel">
 		<item-type>Switch</item-type>
-		<label>is Offline </label>
-		<description>Is device in offline state</description>
+		<label>Is Offline </label>
+		<description>Is device in offline state.</description>
 		<state readOnly="true" />
 	</channel-type>
 	<channel-type id="hasPendingCommand-channel">

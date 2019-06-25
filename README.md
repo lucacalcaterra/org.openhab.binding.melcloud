@@ -72,7 +72,7 @@ A.C. device configuration:
 | Config          | Mandatory | Description                                                                           |
 |-----------------|-----------|---------------------------------------------------------------------------------------|
 | deviceID        | x         | MELCloud device ID.                                                                   |
-| buildingID      |           | MELCloud building ID. If not defined, binding tries to find matching id by deivce ID. |
+| buildingID      |           | MELCloud building ID. If not defined, binding tries to find matching id by device ID. |
 | pollingInterval |           | Refresh time interval in seconds for updates from MELCloud.  Defaults to 60 seconds.  |
 
 
@@ -90,8 +90,8 @@ A.C. device channels
 | vaneHorizontal      | Number   | Vane Horizontal: 0 = Auto, 1 = 1, 2 = 2, 3 = 3, 4 = 4, 5 = 5, 12 = Swing.  | False     |
 | vaneVertical        | Number   | Vane Vertical: 0 = Auto, 1 = 1, 2 = 2, 3 = 3, 4 = 4, 5 = 5, 7 = Swing.     | False     |
 | roomTemperature     | Number   | Room temperature.                                                          | True      |
-| lastCommunication   | DateTime | Last Communication times when MELCloud communicated to the device.         | True      |
-| nextCommunication   | DateTime | Next communication time when MELCloud will communicate too the device.     | True      |
+| lastCommunication   | DateTime | Last Communication time when MELCloud communicated to the device.          | True      |
+| nextCommunication   | DateTime | Next communication time when MELCloud will communicate to the device.      | True      |
 | offline             | Switch   | Is device in offline state.                                                | True      |
 | hasPendingCommand   | Switch   | Device has a pending command(s).                                           | True      |
 
