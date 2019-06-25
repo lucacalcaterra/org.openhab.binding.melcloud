@@ -134,6 +134,11 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     public void handleCommand(ChannelUID channelUID, Command command) {
         logger.debug("Handled command {}", command);
 
+        if (command instanceof RefreshType) {
+            logger.debug("Resfresh command not supported");
+            return;
+        }
+
         if (melCloudHandler == null) {
             logger.warn("No connection to MELCloud available, ignore command");
             return;
@@ -141,11 +146,6 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
         if (deviceStatus == null) {
             logger.warn("No initial data available, ignore command");
-            return;
-        }
-
-        if (command instanceof RefreshType) {
-            logger.debug("Resfresh command not supported");
             return;
         }
 
