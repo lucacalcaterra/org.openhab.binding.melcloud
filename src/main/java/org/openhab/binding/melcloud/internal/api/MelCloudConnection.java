@@ -81,10 +81,8 @@ public class MelCloudConnection {
             }
             sessionKey = resp.getLoginData().getContextKey();
             setConnected(true);
-        } catch (IOException e) {
+        } catch (IOException | JsonSyntaxException e) {
             throw new MelCloudCommException(String.format("Login error, reason: %s", e.getMessage(), e));
-        } catch (JsonSyntaxException e) {
-            throw new MelCloudCommException(String.format("Illegal json: %s", e.getMessage(), e));
         }
     }
 
@@ -95,11 +93,9 @@ public class MelCloudConnection {
                         TIMEOUT);
                 logger.debug("Device list response: {}", response);
                 return gson.fromJson(response, ListDevicesResponse[].class)[0];
-            } catch (IOException e) {
+            } catch (IOException | JsonSyntaxException e) {
                 setConnected(false);
                 throw new MelCloudCommException("Error occured during device list poll", e);
-            } catch (JsonSyntaxException e) {
-                throw new MelCloudCommException(String.format("Illegal json: %s", e.getMessage(), e));
             }
         }
         throw new MelCloudCommException("Not connected to MELCloud");
@@ -113,11 +109,9 @@ public class MelCloudConnection {
                 logger.debug("Device status response: {}", response);
                 DeviceStatus deviceStatus = gson.fromJson(response, DeviceStatus.class);
                 return deviceStatus;
-            } catch (IOException e) {
+            } catch (IOException | JsonSyntaxException e) {
                 setConnected(false);
                 throw new MelCloudCommException("Error occured during device status fetch", e);
-            } catch (JsonSyntaxException e) {
-                throw new MelCloudCommException(String.format("Illegal json: %s", e.getMessage(), e));
             }
         }
         throw new MelCloudCommException("Not connected to MELCloud");
@@ -133,7 +127,7 @@ public class MelCloudConnection {
                         "application/json", TIMEOUT);
                 logger.debug("Device status sending response: {}", response);
                 return gson.fromJson(response, DeviceStatus.class);
-            } catch (IOException e) {
+            } catch (IOException | JsonSyntaxException e) {
                 setConnected(false);
                 throw new MelCloudCommException("Error occured during device command sending", e);
             }

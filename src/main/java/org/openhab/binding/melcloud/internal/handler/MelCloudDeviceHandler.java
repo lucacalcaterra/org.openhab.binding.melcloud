@@ -70,7 +70,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     private final Logger logger = LoggerFactory.getLogger(MelCloudDeviceHandler.class);
     private AcDeviceConfig config;
     private MelCloudAccountHandler melCloudHandler;
-    private DeviceStatus deviceStatus = new DeviceStatus();
+    private DeviceStatus deviceStatus;
     private ScheduledFuture<?> refreshTask;
 
     public MelCloudDeviceHandler(Thing thing) {
@@ -92,8 +92,6 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
         initializeBridge((getBridge() == null) ? null : getBridge().getHandler(),
                 (getBridge() == null) ? null : getBridge().getStatus());
-
-        startAutomaticRefresh();
     }
 
     @Override
@@ -110,6 +108,10 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     public void bridgeStatusChanged(ThingStatusInfo bridgeStatusInfo) {
         logger.debug("bridgeStatusChanged {} for thing {}", bridgeStatusInfo, getThing().getUID());
         initializeBridge((getBridge() == null) ? null : getBridge().getHandler(), bridgeStatusInfo.getStatus());
+
+        if (bridgeStatusInfo.getStatus() == ThingStatus.ONLINE) {
+            startAutomaticRefresh();
+        }
     }
 
     private void initializeBridge(ThingHandler thingHandler, ThingStatus bridgeStatus) {
@@ -132,90 +134,114 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
     public void handleCommand(ChannelUID channelUID, Command command) {
         logger.debug("Handled command {}", command);
 
+        if (melCloudHandler == null) {
+            logger.warn("No connection to MELCloud available, ignore command");
+            return;
+        }
+
+        if (deviceStatus == null) {
+            logger.warn("No initial data available, ignore command");
+            return;
+        }
+
         if (command instanceof RefreshType) {
             logger.debug("Resfresh command not supported");
-        } else {
-            int effectiveFlag = 0;
-            DeviceStatus cmdtoSend = deviceStatus;
+            return;
+        }
 
-            switch (channelUID.getId()) {
-                case CHANNEL_POWER:
-                    cmdtoSend.setPower((OnOffType) command == OnOffType.ON ? true : false);
-                    effectiveFlag = EFFECTIVE_FLAG_POWER;
-                    break;
-                case CHANNEL_OPERATION_MODE:
-                    cmdtoSend.setOperationMode(((DecimalType) command).intValue());
-                    effectiveFlag = EFFECTIVE_FLAG_OPERATION_MODE;
-                    break;
-                case CHANNEL_SET_TEMPERATURE:
-                    BigDecimal val = null;
-                    if (command instanceof QuantityType) {
-                        QuantityType<Temperature> quantity = ((QuantityType<Temperature>) command).toUnit(CELSIUS);
-                        if (quantity != null) {
-                            val = quantity.toBigDecimal().setScale(1, RoundingMode.HALF_UP);
-                        }
-                    } else {
-                        val = new BigDecimal(command.toString()).setScale(1, RoundingMode.HALF_UP);
+        DeviceStatus cmdtoSend = getDeviceStatusCopy(deviceStatus);
+        cmdtoSend.setEffectiveFlags(0);
 
-                    }
-                    if (val != null) {
-                        // round nearest .5
-                        double v = Math.round(val.doubleValue() * 2) / 2.0;
-                        cmdtoSend.setSetTemperature(v);
-                        effectiveFlag = EFFECTIVE_FLAG_TEMPERATURE;
-                    } else {
-                        logger.debug("Can't convert '{}' to set temperature", command);
-                    }
-                    break;
-                case CHANNEL_FAN_SPEED:
-                    cmdtoSend.setSetFanSpeed(((DecimalType) command).intValue());
-                    effectiveFlag = EFFECTIVE_FLAG_FAN_SPEED;
-                    break;
-                case CHANNEL_VANE_VERTICAL:
-                    cmdtoSend.setVaneVertical(((DecimalType) command).intValue());
-                    effectiveFlag = EFFECTIVE_FLAG_VANE_VERTICAL;
-                    break;
-                case CHANNEL_VANE_HORIZONTAL:
-                    cmdtoSend.setVaneHorizontal(((DecimalType) command).intValue());
-                    effectiveFlag = EFFECTIVE_FLAG_VANE_HORIZONTAL;
-                    break;
-                default:
-                    logger.debug("Read only channel {}, skip update", channelUID);
-            }
-
-            if (effectiveFlag > 0) {
-                cmdtoSend.setEffectiveFlags(effectiveFlag);
-                cmdtoSend.setHasPendingCommand(true);
-                cmdtoSend.setDeviceID(config.deviceID);
-                if (melCloudHandler != null) {
-                    try {
-                        deviceStatus = melCloudHandler.sendDeviceStatus(cmdtoSend);
-                        updateChannels(deviceStatus);
-                    } catch (MelCloudCommException e) {
-                        logger.warn("Command '{}' to channel '{}' failed, reason {}. ", command, channelUID,
-                                e.getMessage(), e);
+        switch (channelUID.getId()) {
+            case CHANNEL_POWER:
+                cmdtoSend.setPower((OnOffType) command == OnOffType.ON ? true : false);
+                cmdtoSend.setEffectiveFlags(EFFECTIVE_FLAG_POWER);
+                break;
+            case CHANNEL_OPERATION_MODE:
+                cmdtoSend.setOperationMode(((DecimalType) command).intValue());
+                cmdtoSend.setEffectiveFlags(EFFECTIVE_FLAG_OPERATION_MODE);
+                break;
+            case CHANNEL_SET_TEMPERATURE:
+                BigDecimal val = null;
+                if (command instanceof QuantityType) {
+                    QuantityType<Temperature> quantity = ((QuantityType<Temperature>) command).toUnit(CELSIUS);
+                    if (quantity != null) {
+                        val = quantity.toBigDecimal().setScale(1, RoundingMode.HALF_UP);
                     }
                 } else {
-                    logger.debug("No connection to MELCloud available, ignore command");
+                    val = new BigDecimal(command.toString()).setScale(1, RoundingMode.HALF_UP);
+
                 }
-            } else {
-                logger.debug("Nothing to send");
-            }
+                if (val != null) {
+                    // round nearest .5
+                    double v = Math.round(val.doubleValue() * 2) / 2.0;
+                    cmdtoSend.setSetTemperature(v);
+                    cmdtoSend.setEffectiveFlags(EFFECTIVE_FLAG_TEMPERATURE);
+                } else {
+                    logger.debug("Can't convert '{}' to set temperature", command);
+                }
+                break;
+            case CHANNEL_FAN_SPEED:
+                cmdtoSend.setSetFanSpeed(((DecimalType) command).intValue());
+                cmdtoSend.setEffectiveFlags(EFFECTIVE_FLAG_FAN_SPEED);
+                break;
+            case CHANNEL_VANE_VERTICAL:
+                cmdtoSend.setVaneVertical(((DecimalType) command).intValue());
+                cmdtoSend.setEffectiveFlags(EFFECTIVE_FLAG_VANE_VERTICAL);
+                break;
+            case CHANNEL_VANE_HORIZONTAL:
+                cmdtoSend.setVaneHorizontal(((DecimalType) command).intValue());
+                cmdtoSend.setEffectiveFlags(EFFECTIVE_FLAG_VANE_HORIZONTAL);
+                break;
+            default:
+                logger.debug("Read only or unknown channel {}, skip update", channelUID);
         }
+
+        if (cmdtoSend.getEffectiveFlags() > 0) {
+            cmdtoSend.setHasPendingCommand(true);
+            cmdtoSend.setDeviceID(config.deviceID);
+            try {
+                DeviceStatus newDeviceStatus = melCloudHandler.sendDeviceStatus(cmdtoSend);
+                updateChannels(newDeviceStatus);
+            } catch (MelCloudCommException e) {
+                logger.warn("Command '{}' to channel '{}' failed, reason {}. ", command, channelUID, e.getMessage(), e);
+            }
+        } else {
+            logger.debug("Nothing to send");
+        }
+
+    }
+
+    private DeviceStatus getDeviceStatusCopy(DeviceStatus deviceStatus) {
+        DeviceStatus copy = new DeviceStatus();
+        synchronized (this) {
+            copy.setPower(deviceStatus.getPower());
+            copy.setOperationMode(deviceStatus.getOperationMode());
+            copy.setSetTemperature(deviceStatus.getSetTemperature());
+            copy.setSetFanSpeed(deviceStatus.getSetFanSpeed());
+            copy.setVaneVertical(deviceStatus.getVaneVertical());
+            copy.setVaneHorizontal(deviceStatus.getVaneHorizontal());
+            copy.setEffectiveFlags(deviceStatus.getEffectiveFlags());
+            copy.setHasPendingCommand(deviceStatus.getHasPendingCommand());
+            copy.setDeviceID(deviceStatus.getDeviceID());
+        }
+        return copy;
     }
 
     private void startAutomaticRefresh() {
-        Runnable runnable = () -> getDeviceDataAndUpdateChannels();
-        refreshTask = scheduler.scheduleWithFixedDelay(runnable, 5, config.pollingInterval, TimeUnit.SECONDS);
+        if (refreshTask == null || refreshTask.isCancelled()) {
+            Runnable runnable = () -> getDeviceDataAndUpdateChannels();
+            refreshTask = scheduler.scheduleWithFixedDelay(runnable, 1, config.pollingInterval, TimeUnit.SECONDS);
+        }
     }
 
     private void getDeviceDataAndUpdateChannels() {
         if (melCloudHandler.isConnected()) {
             logger.debug("Update device '{}' channels", getThing().getThingTypeUID());
             try {
-                deviceStatus = melCloudHandler.fetchDeviceStatus(config.deviceID,
+                DeviceStatus newDeviceStatus = melCloudHandler.fetchDeviceStatus(config.deviceID,
                         Optional.ofNullable(config.buildingID));
-                updateChannels(deviceStatus);
+                updateChannels(newDeviceStatus);
             } catch (MelCloudCommException e) {
                 logger.debug("Error occurred during device '{}' polling, reason {}. ", getThing().getThingTypeUID(),
                         e.getMessage(), e);
@@ -225,9 +251,12 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
         }
     }
 
-    private void updateChannels(DeviceStatus deviceStatus) {
-        for (Channel channel : getThing().getChannels()) {
-            updateChannels(channel.getUID().getId(), deviceStatus);
+    private synchronized void updateChannels(DeviceStatus newDeviceStatus) {
+        synchronized (this) {
+            deviceStatus = newDeviceStatus;
+            for (Channel channel : getThing().getChannels()) {
+                updateChannels(channel.getUID().getId(), deviceStatus);
+            }
         }
     }
 

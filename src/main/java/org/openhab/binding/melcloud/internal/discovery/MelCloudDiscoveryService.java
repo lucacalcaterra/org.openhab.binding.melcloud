@@ -26,6 +26,7 @@ import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.openhab.binding.melcloud.internal.MelCloudBindingConstants;
 import org.openhab.binding.melcloud.internal.api.json.Device;
+import org.openhab.binding.melcloud.internal.exceptions.MelCloudCommException;
 import org.openhab.binding.melcloud.internal.handler.MelCloudAccountHandler;
 import org.osgi.service.component.annotations.Modified;
 import org.slf4j.Logger;
@@ -91,31 +92,36 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
         logger.debug("Discover devices)");
 
         if (melCloudHandler != null) {
-            List<Device> deviceList = melCloudHandler.getDeviceList();
+            try {
+                List<Device> deviceList = melCloudHandler.getDeviceList();
 
-            if (deviceList == null) {
-                logger.debug("No devices found");
-            } else {
-                ThingUID bridgeUID = melCloudHandler.getThing().getUID();
+                if (deviceList == null) {
+                    logger.debug("No devices found");
+                } else {
+                    ThingUID bridgeUID = melCloudHandler.getThing().getUID();
 
-                deviceList.forEach(device -> {
-                    ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, melCloudHandler.getThing().getUID(),
-                            device.getDeviceID().toString());
+                    deviceList.forEach(device -> {
+                        ThingUID deviceThing = new ThingUID(THING_TYPE_ACDEVICE, melCloudHandler.getThing().getUID(),
+                                device.getDeviceID().toString());
 
-                    Map<String, Object> deviceProperties = new HashMap<>();
-                    deviceProperties.put("deviceID", device.getDeviceID().toString());
-                    deviceProperties.put("serialNumber", device.getSerialNumber().toString());
-                    deviceProperties.put("macAddress", device.getMacAddress().toString());
-                    deviceProperties.put("deviceName", device.getDeviceName().toString());
-                    deviceProperties.put("buildingID", device.getBuildingID().toString());
+                        Map<String, Object> deviceProperties = new HashMap<>();
+                        deviceProperties.put("deviceID", device.getDeviceID().toString());
+                        deviceProperties.put("serialNumber", device.getSerialNumber().toString());
+                        deviceProperties.put("macAddress", device.getMacAddress().toString());
+                        deviceProperties.put("deviceName", device.getDeviceName().toString());
+                        deviceProperties.put("buildingID", device.getBuildingID().toString());
 
-                    String label = createLabel(device);
-                    logger.debug("Found device: {} : {}", label, deviceProperties);
+                        String label = createLabel(device);
+                        logger.debug("Found device: {} : {}", label, deviceProperties);
 
-                    thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(label)
-                            .withProperties(deviceProperties)
-                            .withRepresentationProperty(device.getDeviceID().toString()).withBridge(bridgeUID).build());
-                });
+                        thingDiscovered(DiscoveryResultBuilder.create(deviceThing).withLabel(label)
+                                .withProperties(deviceProperties)
+                                .withRepresentationProperty(device.getDeviceID().toString()).withBridge(bridgeUID)
+                                .build());
+                    });
+                }
+            } catch (MelCloudCommException e) {
+                logger.debug("Error occurred during device  list fecth, rreason {}. ", e.getMessage(), e);
             }
         }
     }
