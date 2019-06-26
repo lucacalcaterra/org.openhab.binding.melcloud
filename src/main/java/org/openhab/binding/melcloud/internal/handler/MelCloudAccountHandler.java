@@ -49,6 +49,7 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
     private List<Device> devices;
     private ScheduledFuture<?> connectionCheckTask;
     private AccountConfig config;
+    private boolean loginCredentialError;
 
     public MelCloudAccountHandler(Bridge bridge) {
         super(bridge);
@@ -56,24 +57,29 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
 
     @Override
     public void initialize() {
-        logger.debug("Initializing MELCloud bridge handler.");
+        logger.debug("Initializing MELCloud account handler.");
         config = getThing().getConfiguration().as(AccountConfig.class);
         connection = new MelCloudConnection();
         devices = Collections.emptyList();
+        loginCredentialError = false;
         scheduler.execute(() -> {
-            connect();
+            try {
+                connect();
+            } catch (MelCloudCommException e) {
+                logger.debug("Cannot open the connection to MELCloud, reason: {}", e.getMessage());
+            } finally {
+                startConnectionCheck();
+            }
         });
-
     }
 
     @Override
     public void dispose() {
         logger.debug("Running dispose()");
+        stopConnectionCheck();
+        connection = null;
         devices = Collections.emptyList();
-        if (this.connectionCheckTask != null) {
-            this.connectionCheckTask.cancel(true);
-            this.connectionCheckTask = null;
-        }
+        config = null;
     }
 
     @Override
@@ -84,31 +90,37 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
         return getThing().getUID();
     }
 
-    public List<Device> getDeviceList() {
+    public List<Device> getDeviceList() throws MelCloudCommException, MelCloudLoginException {
+        connectIfNotConnected();
+        ListDevicesResponse response = connection.fetchDeviceList();
+        devices = response != null ? response.getStructure().getDevices() : Collections.emptyList();
         return devices;
     }
 
-    private void connect() {
+    private void connect() throws MelCloudCommException, MelCloudLoginException {
+        if (loginCredentialError) {
+            throw new MelCloudLoginException("Connection to MELCloud can't be open because of wrong credentials");
+        }
         logger.debug("Initializing connection to MELCloud");
-        boolean loginError = false;
+        updateStatus(ThingStatus.OFFLINE);
         try {
             connection.login(config.username, config.password, config.language);
-            ListDevicesResponse response = connection.pollDeviceList();
-            if (response != null) {
-                devices = response.getStructure().getDevices();
-            } else {
-                devices = Collections.emptyList();
-            }
+            ListDevicesResponse response = connection.fetchDeviceList();
+            devices = response != null ? response.getStructure().getDevices() : Collections.emptyList();
             updateStatus(ThingStatus.ONLINE);
-        } catch (MelCloudCommException e) {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getMessage());
         } catch (MelCloudLoginException e) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getMessage());
-            loginError = true;
+            loginCredentialError = true;
+            throw e;
+        } catch (MelCloudCommException e) {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
+            throw e;
         }
+    }
 
-        if (!loginError) {
-            startConnectionCheck();
+    private synchronized void connectIfNotConnected() throws MelCloudCommException, MelCloudLoginException {
+        if (!isConnected()) {
+            connect();
         }
     }
 
@@ -116,43 +128,73 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
         return connection.isConnected();
     }
 
-    public DeviceStatus getDeviceStatus(int deviceId, Optional<Integer> buildingId) throws MelCloudCommException {
+    public DeviceStatus sendDeviceStatus(DeviceStatus deviceStatus)
+            throws MelCloudCommException, MelCloudLoginException {
+        connectIfNotConnected();
+        try {
+            return connection.sendDeviceStatus(deviceStatus);
+        } catch (MelCloudLoginException e) {
+            throw e;
+        } catch (MelCloudCommException e) {
+            logger.debug("Sending failed, retry ones with relogin");
+            connect();
+            return connection.sendDeviceStatus(deviceStatus);
+        }
+    }
+
+    public DeviceStatus fetchDeviceStatus(int deviceId, Optional<Integer> buildingId)
+            throws MelCloudCommException, MelCloudLoginException {
+        connectIfNotConnected();
         int bid = buildingId.orElse(findBuildingId(deviceId));
-        return connection.pollDeviceStatus(deviceId, bid);
+
+        try {
+            return connection.fetchDeviceStatus(deviceId, bid);
+        } catch (MelCloudLoginException e) {
+            throw e;
+        } catch (MelCloudCommException e) {
+            logger.debug("Sending failed, retry ones with relogin");
+            connect();
+            return connection.fetchDeviceStatus(deviceId, bid);
+        }
     }
 
     private int findBuildingId(int deviceId) throws MelCloudCommException {
-        List<Device> deviceList = getDeviceList();
-        if (deviceList != null) {
-            return deviceList.stream().filter(d -> d.getDeviceID() == deviceId).findFirst().orElseThrow(
+        if (devices != null) {
+            return devices.stream().filter(d -> d.getDeviceID() == deviceId).findFirst().orElseThrow(
                     () -> new MelCloudCommException(String.format("Can't find building id for device id %s", deviceId)))
                     .getBuildingID();
         }
         throw new MelCloudCommException(String.format("Can't find building id for device id %s", deviceId));
     }
 
-    public DeviceStatus sendCommand(DeviceStatus deviceStatusToSend) throws MelCloudCommException {
-        return connection.sendCommand(deviceStatusToSend);
-    }
-
     private void startConnectionCheck() {
         if (connectionCheckTask == null || connectionCheckTask.isCancelled()) {
             logger.debug("Start periodic connection check");
             Runnable runnable = () -> {
+                logger.debug("Check MELCloud connection");
                 if (connection.isConnected()) {
-                    logger.trace("Connection to MELCloud open");
+                    logger.debug("Connection to MELCloud open");
                 } else {
                     try {
                         connect();
+                    } catch (MelCloudCommException e) {
+                        logger.debug("Connection to MELCloud down");
                     } catch (RuntimeException e) {
                         logger.warn("Unknown error occured during connection check, reason: {}.", e.getMessage(), e);
                     }
                 }
             };
-
-            connectionCheckTask = scheduler.scheduleWithFixedDelay(runnable, 30, 30, TimeUnit.SECONDS);
+            connectionCheckTask = scheduler.scheduleWithFixedDelay(runnable, 30, 60, TimeUnit.SECONDS);
         } else {
             logger.debug("Connection check task already running");
+        }
+    }
+
+    private void stopConnectionCheck() {
+        if (connectionCheckTask != null) {
+            logger.debug("Stop periodic connection check");
+            connectionCheckTask.cancel(true);
+            connectionCheckTask = null;
         }
     }
 }
