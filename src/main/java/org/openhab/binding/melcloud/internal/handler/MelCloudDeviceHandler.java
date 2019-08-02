@@ -122,6 +122,7 @@ public class MelCloudDeviceHandler extends BaseThingHandler {
 
             if (bridgeStatus == ThingStatus.ONLINE) {
                 updateStatus(ThingStatus.ONLINE);
+                startAutomaticRefresh();
             } else {
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.BRIDGE_OFFLINE);
             }
