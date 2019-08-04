@@ -28,7 +28,6 @@ import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.melcloud.internal.api.MelCloudConnection;
 import org.openhab.binding.melcloud.internal.api.json.Device;
 import org.openhab.binding.melcloud.internal.api.json.DeviceStatus;
-import org.openhab.binding.melcloud.internal.api.json.ListDevicesResponse;
 import org.openhab.binding.melcloud.internal.config.AccountConfig;
 import org.openhab.binding.melcloud.internal.exceptions.MelCloudCommException;
 import org.openhab.binding.melcloud.internal.exceptions.MelCloudLoginException;
@@ -41,6 +40,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Luca Calcaterra - Initial contribution
  * @author Pauli Anttila - Refactoring
+ * @author Wietse van Buitenen - Return all devices
  */
 public class MelCloudAccountHandler extends BaseBridgeHandler {
     private final Logger logger = LoggerFactory.getLogger(MelCloudAccountHandler.class);
@@ -92,9 +92,7 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
 
     public List<Device> getDeviceList() throws MelCloudCommException, MelCloudLoginException {
         connectIfNotConnected();
-        ListDevicesResponse response = connection.fetchDeviceList();
-        devices = response != null ? response.getStructure().getDevices() : Collections.emptyList();
-        return devices;
+        return connection.fetchDeviceList();
     }
 
     private void connect() throws MelCloudCommException, MelCloudLoginException {
@@ -105,8 +103,7 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
         updateStatus(ThingStatus.OFFLINE);
         try {
             connection.login(config.username, config.password, config.language);
-            ListDevicesResponse response = connection.fetchDeviceList();
-            devices = response != null ? response.getStructure().getDevices() : Collections.emptyList();
+            devices = connection.fetchDeviceList();
             updateStatus(ThingStatus.ONLINE);
         } catch (MelCloudLoginException e) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getMessage());
