@@ -133,7 +133,7 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
         } catch (MelCloudLoginException e) {
             throw e;
         } catch (MelCloudCommException e) {
-            logger.debug("Sending failed, retry ones with relogin");
+            logger.debug("Sending failed, retry once with relogin");
             connect();
             return connection.sendDeviceStatus(deviceStatus);
         }
@@ -149,7 +149,7 @@ public class MelCloudAccountHandler extends BaseBridgeHandler {
         } catch (MelCloudLoginException e) {
             throw e;
         } catch (MelCloudCommException e) {
-            logger.debug("Sending failed, retry ones with relogin");
+            logger.debug("Sending failed, retry once with relogin");
             connect();
             return connection.fetchDeviceStatus(deviceId, bid);
         }
