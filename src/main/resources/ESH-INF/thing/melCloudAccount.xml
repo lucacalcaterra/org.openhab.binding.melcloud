@@ -14,6 +14,7 @@
 				<description>MELCloud email address</description>
 			</parameter>
 			<parameter name="password" type="text" required="true">
+				<context>password</context>
 				<label>Password</label>
 				<description>MELCloud password</description>
 			</parameter>
