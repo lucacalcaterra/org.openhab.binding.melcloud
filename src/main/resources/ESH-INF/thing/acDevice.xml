@@ -103,8 +103,8 @@
 	</channel-type>
 	<channel-type id="vaneVertical-channel">
 		<item-type>Number</item-type>
-		<label>Vane Horizontal</label>
-		<description>Vane horizontal</description>
+		<label>Vane Vertical</label>
+		<description>Vane vertical</description>
 		<state readOnly="false">
 			<options>
 				<option value="0">Auto</option>

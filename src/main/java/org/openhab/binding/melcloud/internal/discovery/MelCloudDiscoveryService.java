@@ -89,7 +89,7 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
     }
 
     private void discoverDevices() {
-        logger.debug("Discover devices)");
+        logger.debug("Discover devices");
 
         if (melCloudHandler != null) {
             try {
@@ -121,7 +121,7 @@ public class MelCloudDiscoveryService extends AbstractDiscoveryService {
                     });
                 }
             } catch (MelCloudCommException e) {
-                logger.debug("Error occurred during device  list fecth, rreason {}. ", e.getMessage(), e);
+                logger.debug("Error occurred during device list fetch, reason {}. ", e.getMessage(), e);
             }
         }
     }
