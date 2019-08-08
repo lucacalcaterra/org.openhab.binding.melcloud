@@ -16,9 +16,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.smarthome.io.net.http.HttpUtil;
+import org.openhab.binding.melcloud.internal.api.json.Device;
 import org.openhab.binding.melcloud.internal.api.json.DeviceStatus;
 import org.openhab.binding.melcloud.internal.api.json.ListDevicesResponse;
 import org.openhab.binding.melcloud.internal.api.json.LoginClientResponse;
@@ -37,6 +41,7 @@ import com.google.gson.JsonSyntaxException;
  *
  * @author Luca Calcaterra - Initial Contribution
  * @author Pauli Anttila - Refactoring
+ * @author Wietse van Buitenen - Return all devices
  */
 public class MelCloudConnection {
 
@@ -86,13 +91,35 @@ public class MelCloudConnection {
         }
     }
 
-    public ListDevicesResponse fetchDeviceList() throws MelCloudCommException {
+    public List<Device> fetchDeviceList() throws MelCloudCommException {
         if (isConnected()) {
             try {
                 String response = HttpUtil.executeUrl("GET", DEVICE_LIST_URL, getHeaderProperties(), null, null,
                         TIMEOUT);
                 logger.debug("Device list response: {}", response);
-                return gson.fromJson(response, ListDevicesResponse[].class)[0];
+                List<Device> devices = new ArrayList<Device>();
+                ListDevicesResponse[] buildings = gson.fromJson(response, ListDevicesResponse[].class);
+                Arrays.asList(buildings).forEach(building -> {
+                    if (building.getStructure().getDevices() != null) {
+                        devices.addAll(building.getStructure().getDevices());
+                    }
+
+                    building.getStructure().getFloors().forEach(floor -> {
+                        if (floor.getDevices() != null) {
+                            devices.addAll(floor.getDevices());
+                        }
+
+                        floor.getAreas().forEach(area -> {
+                            if (area.getDevices() != null) {
+                                devices.addAll(area.getDevices());
+                            }
+                        });
+                    });
+
+                });
+                logger.debug("Found {} devices", devices.size());
+
+                return devices;
             } catch (IOException | JsonSyntaxException e) {
                 setConnected(false);
                 throw new MelCloudCommException("Error occured during device list poll", e);
