@@ -1,4 +1,4 @@
-## N.B.: For developers who wants contribute not use this repo. Use Instead the openhab2-fork at https://github.com/lucacalcaterra/openhab2-addons
+### N.B.: For developers who wants contribute not use this repo. Use Instead the openhab2-fork at https://github.com/lucacalcaterra/openhab2-addons
 
 # MELCloud Binding
 
