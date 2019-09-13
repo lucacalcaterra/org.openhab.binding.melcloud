@@ -1,6 +1,5 @@
 
-### N.B.: For developers who wants contribute not use this repo. Use Instead the openhab2-fork at https://github.com/lucacalcaterra/openhab2-addons (actually in WIP, contact me if you want to submit a PR)
-
+### N.B.: For developers who wants contribute not use this repo. Use Instead the openhab2-fork at https://github.com/lucacalcaterra/openhab2-addons 
 # MELCloud Binding
 
 This is an openHAB binding for Mitsubishi MELCloud (https://www.melcloud.com/). 
